@@ -33,8 +33,7 @@ label[for="nav-trigger"] {
 	z-index: 2;
 	margin: 0;
 	cursor: pointer;
-	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' width='30px' height='30px' viewBox='0 0 30 30' enable-background='new 0 0 30 30' xml:space='preserve'><rect fill='#333' width='30' height='6'/><rect fill='#333' y='24' width='30' height='6'/><rect fill='#333' y='12' width='30' height='6'/></svg>");
-	background-size: contain;
+    	color: #333;
 }
 #navigation {
 	margin: 0;
