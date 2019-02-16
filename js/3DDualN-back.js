@@ -181,7 +181,7 @@ Engine.prototype.getLayoutHTML = function () {
     var s = "";
     s += "<ul id=\"navigation\"></ul>";
     s += "<input type=\"checkbox\" id=\"nav-trigger\"/>";
-    s += "<label for=\"nav-trigger\"></label>";
+    s += "<label for=\"nav-trigger\">&#9776;</label>";
     s += "<div id=\"site-wrap\"></div>";
     return s;
 };
