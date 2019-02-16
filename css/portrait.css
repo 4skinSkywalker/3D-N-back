@@ -24,32 +24,32 @@
 	right: 2vh;
 }
 #eye-btn, #ear-btn {
-    font-size: 5vh;
-    text-align: center;
-    width: 49.5vw;
-    line-height: 100%;
-    background: #333;
-    color: #111;
-    position: absolute;
-    bottom: 0;
-    padding: 3vh 0;
-    border: 0.1vw solid #000;
+	font-size: 5vh;
+	text-align: center;
+	width: 49.5vw;
+	line-height: 100%;
+	background: #333;
+	color: #111;
+	position: absolute;
+	bottom: 0;
+	padding: 3vh 0;
+	border: 0.1vw solid #000;
 }
 #eye-btn {
 	left: 0;
-    border-top-right-radius: 4px;
-    border-width: 0 .25vw 0 0;
+	border-top-right-radius: 4px;
+	border-width: 0 .25vw 0 0;
 }
 #ear-btn {
 	right: 0;
 	border-top-left-radius: 4px;
-    border-width: 0 0 0 .25vw; 
+    	border-width: 0 0 0 .25vw; 
 }
 #eye-btn:before {
-  content: "Visual";
+  	content: "Visual";
 }
 #ear-btn:before {
-  content: "Audio";
+  	content: "Audio";
 }
 .pop {
 	font-size: 5vh;
@@ -61,24 +61,24 @@
 	padding: 1vh;
 }
 .ct-label {
-    font-size: 3vh;
+    	font-size: 3vh;
 }
 .btn-standard {
-    font-size: 4vh;
-    padding: 1vh 1.5vh;
+	font-size: 4vh;
+	padding: 1vh 1.5vh;
 }
 .btn-popup {
-    width: 7vh;
-    height: 7vh;
-    font-size: 4vh;
+	width: 7vh;
+	height: 7vh;
+	font-size: 4vh;
 }
 .btn-popup.normal {
 	top: 2vh;
-    right: 2vh;
+    	right: 2vh;
 }
 .btn-popup.reflected {
-    bottom: 13vh;
-    right: 2vh;
+	bottom: 13vh;
+	right: 2vh;
 }
 #navigation {
 	padding: 2vh;
@@ -91,6 +91,7 @@ label[for="nav-trigger"] {
 	left: 2vh;
 	width: 6vh;
 	height: 6vh;
+	font-size: 4vh;
 }
 #nav-trigger:checked + label {
 	left: 37vh;
@@ -111,8 +112,8 @@ label[for="nav-trigger"] {
 	display: block;
 	width: 31vh!important;
 	font-size: 3vh;
-    border: 0;
-    border-radius: 4px;
+	border: 0;
+	border-radius: 4px;
 }
 input[type=range].slider::-webkit-slider-runnable-track, .nav-item input, .nav-item select {
 	height: 5vh;
