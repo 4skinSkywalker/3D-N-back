@@ -4,30 +4,30 @@
 }
 #status-bar * {
 	position: absolute;
-    line-height: 100%;
-    font-size: 10vh;
+	line-height: 100%;
+	font-size: 10vh;
 }
 #N-level {
 	font-size: 6vh;
 }
 #left-stimuli {
-    bottom: 4vh;
-    right: 4vh;
+	bottom: 4vh;
+	right: 4vh;
 }
 #engine-button {
 	bottom: 4vh;
 	left: 4vh;
 }
 #eye-btn, #ear-btn {
-    font-size: 7vh;
-    text-align: center;
-    height: 10vh;
-    background: #333;
-    color: #111;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 20vh 4vw;
+	font-size: 7vh;
+	text-align: center;
+	height: 10vh;
+	background: #333;
+	color: #111;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	padding: 20vh 4vw;
 }
 #eye-btn {
 	left: 0;
@@ -55,7 +55,7 @@
 	padding: 2vh;
 }
 .ct-label {
-    font-size: 6vh;
+	font-size: 6vh;
 }
 .btn-standard {
 	font-size: 7vh;
@@ -63,18 +63,18 @@
 	cursor: pointer;
 }
 .btn-popup {
-    width: 12vh;
-    height: 12vh;
-    font-size: 7vh;
-    cursor: pointer;
+	width: 12vh;
+	height: 12vh;
+	font-size: 7vh;
+	cursor: pointer;
 }
 .btn-popup.normal {
 	top: 4vh;
-    right: 4vh;
+    	right: 4vh;
 }
 .btn-popup.reflected {
-    top: 4vh;
-    right: 4vh;
+    	top: 4vh;
+    	right: 4vh;
 }
 #navigation {
 	padding: 4vh;
@@ -87,6 +87,7 @@ label[for="nav-trigger"] {
 	left: 4vh;
 	width: 10vh;
 	height: 10vh;
+	font-size: 7vh;
 }
 #nav-trigger:checked + label {
 	left: 67vh;
@@ -105,10 +106,10 @@ label[for="nav-trigger"] {
 }
 .nav-item input, .nav-item select {
 	display: block;
-    width: 55vh!important;
+	width: 55vh!important;
 	font-size: 5vh;
-    border: 0;
-    border-radius: 4px;
+	border: 0;
+	border-radius: 4px;
 }
 input[type=range].slider::-webkit-slider-runnable-track, .nav-item input, .nav-item select {
 	height: 8vh;
