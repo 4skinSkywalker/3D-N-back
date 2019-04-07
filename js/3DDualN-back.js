@@ -10,20 +10,20 @@ function Engine(name) {
         type: "range",
         target: "stimulus-time",
         text: "Stimulus:",
-        value: 3000,
-        min: 1500,
+        value: 250,
+        min: 200,
         step: 250,
-        MAX: 4500,
+        MAX: 3000,
         char: "ms"
     };
     this.blocks = {
         type: "range",
         target: "matching-blocks",
         text: "Matching:",
-        value: 6,
-        min: 3,
-        step: 1,
-        MAX: 9
+        value: 8,
+        min: 6,
+        step: 2,
+        MAX: 24
     };
     this.n = {
         type: "range",
@@ -32,7 +32,7 @@ function Engine(name) {
         value: 2,
         min: 1,
         step: 1,
-        MAX: 9
+        MAX: 10
     };
     this.threshold = {
         type: "range",
