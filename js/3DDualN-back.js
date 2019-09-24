@@ -10,9 +10,9 @@ function Engine(name) {
         type: "range",
         target: "stimulus-time",
         text: "Stimulus:",
-        value: 250,
-        min: 200,
-        step: 250,
+        value: 2500,
+        min: 2000,
+        step: 2500,
         MAX: 3000,
         char: "ms"
     };
