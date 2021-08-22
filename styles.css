@@ -1,0 +1,438 @@
+@import url('https://fonts.googleapis.com/css2?family=Nova+Square&display=swap');
+
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  max-width: 1024px;
+  height: 100vh;
+  font-family: 'Nova Square', cursive;
+  font-size: 50px;
+  background: #000;
+  perspective: 10em;
+  overflow: hidden;
+  user-select: none;
+}
+
+@media (max-width: 576px) {
+  body {
+    font-size: 40px;
+  }
+}
+
+.scene-cube, .scene-progress {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+
+.scene-cube {
+  transform:
+    rotateX(-30deg)
+    rotateY(45deg);
+}
+
+.floor-cube {
+  position: absolute;
+  top: 1.5em;
+  transform: translate(-50%, -50%) rotateX(90deg);
+  width: 15em;
+  height: 15em;
+  background-image:
+    radial-gradient(
+      #0000,
+      #000 66.6%
+    ),
+    repeating-conic-gradient(
+      #222 0 90deg,
+      #444 90deg 180deg
+    );
+  background-size: 100%, 2em 2em;
+}
+
+.cube-shadow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3em;
+  height: 3em;
+  box-shadow: 0 0 1em #fff4;
+}
+
+.left-shadow, .right-shadow, .front-shadow, .back-shadow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3em;
+  height: 3em;
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+
+.left-shadow.active, .right-shadow.active, .front-shadow.active, .back-shadow.active {
+  opacity: 1;
+}
+
+.left-shadow {
+  transform:
+    translate(-50%, -50%);
+  box-shadow:
+    -1.5em 0 1.5em -1em #ff0;
+}
+
+.right-shadow {
+  transform:
+    translate(-50%, -50%);
+  box-shadow:
+    1.5em 0 1.5em -1em #f0f;
+}
+
+.front-shadow {
+  transform:
+    translate(-50%, -50%);
+  box-shadow:
+    0 1.5em 1.5em -1em #0ff;
+}
+
+.front-shadow {
+  transform:
+    translate(-50%, -50%);
+  box-shadow:
+    0 1.5em 1.5em -1em #0ff;
+}
+
+.back-shadow {
+  transform:
+    translate(-50%, -50%);
+  box-shadow:
+    0 -1.5em 1.5em -1em #f00;
+}
+
+.cube {
+  position: absolute;
+  transform-style: preserve-3d;
+  transform: translate(-50%, -50%);
+  width: 3em;
+  height: 3em;
+}
+
+.top, .bottom, .left, .right, .front, .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #fff4;
+  box-shadow: inset 0 0 1em #0008;
+  transition: background-color .4s ease;
+}
+
+.top {
+  transform: 
+    translateY(-1.5em)
+    rotateX(-90deg);
+}
+
+.top.active {
+  background-color: #0f0a;
+}
+
+.bottom {
+  transform:
+    translateY(1.5em)
+    rotateX(90deg);
+}
+
+.bottom.active {
+  background-color: #00fa;
+}
+
+.left {
+  transform:
+    translateX(-1.5em)
+    rotateY(90deg);
+}
+
+.left.active {
+  background-color: #ff0a;
+}
+
+.right {
+  transform:
+    translateX(1.5em)
+    rotateY(-90deg);
+}
+
+.right.active {
+  background-color: #f0fa;
+}
+
+.front {
+  transform: translateZ(1.5em);
+}
+
+.front.active {
+  background-color: #0ffa;
+}
+
+.back {
+  transform: translateZ(-1.5em);
+}
+
+.back.active {
+  background-color: #f00a;
+}
+
+.scene-progress {
+  bottom: 1.25em;
+}
+
+@media (max-width: 576px) {
+  .scene-progress {
+    bottom: 3.25em;
+  }
+}
+
+.floor-progress {
+  position: absolute;
+  top: .25em;
+  transform-style: preserve-3d;
+  transform: translate(-50%, -50%) rotateX(90deg);
+  width: 7.5em;
+  height: 7.5em;
+}
+
+.progress-container-shadow, .progress-bar-shadow {
+  position: absolute;
+  height: .5em;
+}
+
+.progress-container-shadow {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 7.5em;
+  box-shadow: 0 0 .5em #fff2;
+}
+
+.progress-bar-shadow {
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 0;
+  box-shadow: 0 0 .5em #f004;
+  transition: width 1s ease-out;
+}
+
+.progress-container, .progress-bar {
+  position: absolute;
+  transform-style: preserve-3d;
+  height: .5em;
+}
+
+.progress-container {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 7.5em;
+}
+
+.progress-container > * {
+  background-color: #fff4;
+}
+
+.progress-bar {
+  left: -3.75em;
+  transform: translate(0, -50%);
+  width: 0;
+  transition: width 1s ease-out;
+}
+
+.progress-bar > * {
+  background-color: #f008;
+}
+
+.progress-top, .progress-bottom, .progress-left, .progress-right, .progress-front, .progress-back {
+  position: absolute;
+  box-shadow: inset 0 0 .25em #0008;
+}
+
+.progress-top, .progress-bottom, .progress-front, .progress-back {
+  width: 100%;
+  height: 100%;
+}
+
+.progress-top {
+  transform:
+    rotateX(90deg)
+    translateZ(.25em);
+}
+
+.progress-bottom {
+  transform:
+    rotateX(-90deg)
+    translateZ(.25em);
+}
+
+.progress-front {
+  transform: translateZ(.25em);
+}
+
+.progress-back {
+  transform: translateZ(-.25em);
+}
+
+.progress-left, .progress-right {
+  width: .5em;
+  height: .5em;
+}
+
+.progress-left {
+  transform:
+    rotateY(90deg)
+    translateZ(-.25em);
+}
+
+.progress-right {
+  right: 0;
+  transform:
+    rotateY(-90deg)
+    translateZ(-.25em);
+}
+
+.btn {
+  width: 5.5em;
+  height: 3em;
+  padding: 0;
+  font-family: inherit;
+  font-size: 50%;
+  border: 0;
+  border-radius: .75em;
+  background-color: #fff6;
+  cursor: pointer;
+  transition:
+    background-color .3s ease,
+    box-shadow 1.2s ease;
+}
+
+.btn.right {
+  background-color: #0f0;
+  box-shadow: 0 0 1em #0f04;
+}
+
+.btn.wrong {
+  background-color: #f00;
+  box-shadow: 0 0 1em #f004;
+}
+
+.play, .stop {
+  position: absolute;
+  z-index: 100;
+  top: 3em;
+}
+
+.play.active {
+  box-shadow:
+    inset 0 0 .5em #0f08,
+    0 0 1em #0f04;
+}
+
+.stop.active {
+  box-shadow:
+    inset 0 0 .5em #f008,
+    0 0 1em #f004;
+}
+
+@media (max-width: 576px) {
+  .play, .stop {
+    top: 1em;
+  }
+}
+
+.play {
+  left: 1em;
+  transform:
+    rotateX(7.5deg)
+    rotateY(-5deg);
+  background-image:
+    linear-gradient(
+      135deg,
+      #0004,
+      #fff8
+    );
+}
+
+.stop {
+  right: 1em;
+  transform:
+    rotateX(7.5deg)
+    rotateY(5deg);
+  background-image:
+    linear-gradient(
+      -135deg,
+      #0004,
+      #fff8
+    );
+}
+
+.check-position, .check-sound {
+  position: absolute;
+  z-index: 100;
+  bottom: 3em;
+}
+
+@media (max-width: 576px) {
+  .check-position, .check-sound {
+    bottom: 1em;
+  }
+}
+
+.check-position {
+  left: 1em;
+  transform:
+    rotateX(-7.5deg)
+    rotateY(-5deg);
+  background-image:
+    linear-gradient(
+      45deg,
+      #0004,
+      #fff8
+    );
+}
+
+.check-sound {
+  right: 1em;
+  transform:
+    rotateX(-7.5deg)
+    rotateY(5deg);
+  background-image:
+    linear-gradient(
+      -45deg,
+      #0004,
+      #fff8
+    );
+}
+
+.n-back {
+  position: absolute;
+  top: 0.5em;
+  color: #fff
+}
+
+#n-back {
+  width: 1em;
+  border: 0;
+  font-family: inherit;
+  font-size: 100%;
+  color: #fff;
+  background-color: transparent;
+}
+
+#n-back:focus {
+  outline: 0;
+}
+
+@media (max-width: 576px) {
+  .n-back {
+    top: 2.5em;
+  }
+}
