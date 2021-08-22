@@ -116,7 +116,7 @@ update();
 
 // Game settings
 let numbers = "012345"
-let letters = "abfjlo";
+let letters = "abfloq";
 let stimuli = 6;
 let baseDelay = 1750;
 let cumulativeDelay = 250;
