@@ -10,6 +10,8 @@ let progressBarShadow = document.querySelector(".progress-bar-shadow");
 let checkPositionBtn = document.querySelector(".check-position");
 let checkSoundBtn = document.querySelector(".check-sound");
 
+let nBackInput = document.querySelector("#n-back");
+
 // Position
 let rx = -30;
 let ry = 45;
@@ -111,7 +113,6 @@ function update() {
 }
 
 update();
-
 
 // Game settings
 let numbers = "012345"
@@ -292,8 +293,10 @@ function getGameCycle(n) {
         .onend = function () {
           if (percentage >= nextLevelThreshold) {
             speak("Congratulations! Advancing to the next level.");
+            nBackInput.value = +nBackInput.value + 1;
           } else if (percentage <= prevLevelThreshold) {
             speak("Going back to the previous level. Keep training.");
+            nBackInput.value = +nBackInput.value - 1;
           } else {
             speak("Level remains the same. Keep training.");
           }
@@ -336,7 +339,7 @@ function play() {
   
   resetPreGame();
   
-  let n = +document.querySelector("#n-back").value;
+  let n = +nBackInput.value;
   intervals.push(
     setInterval(
       getGameCycle(n),
