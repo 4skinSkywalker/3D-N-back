@@ -116,7 +116,7 @@ update();
 
 // Game settings
 let numbers = "012345"
-let letters = "abfloq";
+let letters = "abflqy";
 let stimuli = 6;
 let baseDelay = 1750;
 let cumulativeDelay = 250;
@@ -185,16 +185,22 @@ function createBlocks(symbols, n) {
     }
     let _symbols = [...symbols];
     // Look behind of N
-    let prev = blocks[i - n] || {};
-    let isPrevFound = _symbols.indexOf(prev.symbol);
-    if (prev && isPrevFound > -1) {
-      _symbols.splice(isPrevFound, 1);
+    let prev = blocks[i - n];
+    let prevIndex = -1;
+    if (prev) {
+      prevIndex = _symbols.indexOf(prev.symbol);
+    }
+    if (prev && prevIndex > -1) {
+      _symbols.splice(prevIndex, 1);
     }
     // Look ahead of N
-    let next = blocks[i + n] || {};
-    let isNextFound = _symbols.indexOf(next.symbol);
-    if (next && isNextFound > -1) {
-      _symbols.splice(isNextFound, 1);
+    let next = blocks[i + n];
+    let nextIndex = -1;
+    if (next) {
+      nextIndex = _symbols.indexOf(next.symbol);
+    }
+    if (next && nextIndex > -1) {
+      _symbols.splice(nextIndex, 1);
     }
     // Pick noise
     let noise = random(_symbols);
@@ -204,48 +210,30 @@ function createBlocks(symbols, n) {
       symbol: noise
     };
   }
+  console.log(blocks);
   return blocks;
 }
 
-function resetPreGame() {
-  isRunning = false;
-  
+function resetPoints() {
   rightPos = 0;
   rightSnd = 0;
   wrongPos = 0;
   wrongSnd = 0;
 }
 
-function resetInGame() {
-  isRunning = true;
-  
+function resetBlock() {
   enablePosCheck = true;
   enableSndCheck = true;
   currPos = null;
   currSnd = null;
-  
   checkPositionBtn.classList.remove("right", "wrong");
   checkSoundBtn.classList.remove("right", "wrong");
-  
-  document.querySelector(".stop").classList.remove("active");
-  document.querySelector(".play").classList.add("active");
 }
 
-function resetPostGame() {
-  isRunning = false;
-  
-  enablePosCheck = true;
-  enableSndCheck = true;
-  currPos = null;
-  currSnd = null;
-  
-  checkPositionBtn.classList.remove("right", "wrong");
-  checkSoundBtn.classList.remove("right", "wrong");
-  
-  document.querySelector(".play").classList.remove("active");
-  document.querySelector(".stop").classList.add("active");
-  
-  intervals.forEach(interval => clearInterval(interval));
+function resetIntervals() {
+  intervals.forEach(interval => 
+    clearInterval(interval)
+  );
 }
 
 function wow(htmlElement, cssClass, delay) {
@@ -277,7 +265,7 @@ function getGameCycle(n) {
   let i = 0;
   return function() {
     
-    resetInGame();
+    resetBlock();
     
     if (!isRunning) {
       return;
@@ -285,16 +273,29 @@ function getGameCycle(n) {
     
     // End game
     if (i > positions.length - 1) {
-      resetPostGame();
       
-      let percentage = (rightPos + rightSnd) / (stimuli * 2);
+      // Save scores before stopping
+      let percentage = (_rightPos + _rightSnd) / (stimuli * 2);
+      let mistakes = wrongPos + wrongSnd;
       
-      speak(`You've got ${Math.floor(percentage * 100)} percent of correct stimuli.`)
+      stop();
+      
+      speak(`You've got ${Math.floor(percentage * 100)} percent of correct stimuli. With ${mistakes} mistakes.`)
         .onend = function () {
-          if (percentage >= nextLevelThreshold && +nBackInput.value < 9) {
+          if (
+            percentage >= nextLevelThreshold
+            && mistakes <= stimuli / 2
+            && +nBackInput.value < 9
+          ) {
             speak("Congratulations! Advancing to the next level.");
             nBackInput.value = +nBackInput.value + 1;
-          } else if (percentage <= prevLevelThreshold && +nBackInput.value > 1) {
+          } else if (
+            (
+              percentage <= prevLevelThreshold
+              || mistakes > stimuli / 2
+            )
+            && +nBackInput.value > 1
+          ) {
             speak("Going back to the previous level. Keep training, you'll get better.");
             nBackInput.value = +nBackInput.value - 1;
           } else {
@@ -335,9 +336,11 @@ function play() {
     return;
   }
   
-  speak("Start.");
+  isRunning = true;
   
-  resetPreGame();
+  speak("Start.");
+  document.querySelector(".stop").classList.remove("active");
+  document.querySelector(".play").classList.add("active");
   
   let n = +nBackInput.value;
   intervals.push(
@@ -353,9 +356,15 @@ function stop() {
     return;
   }
   
-  speak("Stop.");
+  resetPoints();
+  resetBlock();
+  resetIntervals();
   
-  resetPostGame();
+  isRunning = false;
+  
+  speak("Stop.");
+  document.querySelector(".stop").classList.add("active");
+  document.querySelector(".play").classList.remove("active");
 }
 
 function positionCheckHandler() {
