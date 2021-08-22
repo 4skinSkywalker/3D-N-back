@@ -210,7 +210,6 @@ function createBlocks(symbols, n) {
       symbol: noise
     };
   }
-  console.log(blocks);
   return blocks;
 }
 
@@ -275,7 +274,7 @@ function getGameCycle(n) {
     if (i > positions.length - 1) {
       
       // Save scores before stopping
-      let percentage = (_rightPos + _rightSnd) / (stimuli * 2);
+      let percentage = (rightPos + rightSnd) / (stimuli * 2);
       let mistakes = wrongPos + wrongSnd;
       
       stop();
