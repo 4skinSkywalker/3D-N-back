@@ -116,7 +116,7 @@ update();
 
 // Game settings
 let numbers = "012345"
-let letters = "abefhl";
+let letters = "abfjlo";
 let stimuli = 6;
 let baseDelay = 1750;
 let cumulativeDelay = 250;
@@ -291,14 +291,14 @@ function getGameCycle(n) {
       
       speak(`You've got ${Math.floor(percentage * 100)} percent of correct stimuli.`)
         .onend = function () {
-          if (percentage >= nextLevelThreshold) {
+          if (percentage >= nextLevelThreshold && +nBackInput.value < 9) {
             speak("Congratulations! Advancing to the next level.");
             nBackInput.value = +nBackInput.value + 1;
-          } else if (percentage <= prevLevelThreshold) {
-            speak("Going back to the previous level. Keep training.");
+          } else if (percentage <= prevLevelThreshold && +nBackInput.value > 1) {
+            speak("Going back to the previous level. Keep training, you'll get better.");
             nBackInput.value = +nBackInput.value - 1;
           } else {
-            speak("Level remains the same. Keep training.");
+            speak("Level remains the same. Over time you'll get better.");
           }
       };
       
