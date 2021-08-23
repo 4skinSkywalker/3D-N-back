@@ -283,7 +283,7 @@ function getGameCycle(n) {
       
       stop();
       
-      speak(`You've got ${Math.floor(percentage * 100)} percent of correct stimuli. With ${mistakes} mistakes.`)
+      speak(`You've got ${Math.floor(percentage * 100)} percent of correct stimuli. With ${mistakes} mistake${(mistakes > 1) ? "s" : ""}.`)
         .onend = function () {
           if (
             percentage >= nextLevelThreshold
