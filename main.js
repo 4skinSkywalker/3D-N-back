@@ -163,7 +163,11 @@ function createBlocks(symbols, n) {
     let rnd = Math.floor(
       n + Math.random() * (blocks.length - n * 2)
     );
-    while (blocks[rnd] || blocks[rnd + n]) {
+    while (
+      blocks[rnd]
+      || blocks[rnd - n]
+      || blocks[rnd + n]
+    ) {
       rnd = Math.floor(
         n + Math.random() * (blocks.length - n * 2)
       );
@@ -190,7 +194,7 @@ function createBlocks(symbols, n) {
     if (prev) {
       prevIndex = _symbols.indexOf(prev.symbol);
     }
-    if (prev && prevIndex > -1) {
+    if (prevIndex > -1) {
       _symbols.splice(prevIndex, 1);
     }
     // Look ahead of N
@@ -199,7 +203,7 @@ function createBlocks(symbols, n) {
     if (next) {
       nextIndex = _symbols.indexOf(next.symbol);
     }
-    if (next && nextIndex > -1) {
+    if (nextIndex > -1) {
       _symbols.splice(nextIndex, 1);
     }
     // Pick noise
