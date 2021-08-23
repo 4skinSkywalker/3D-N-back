@@ -115,7 +115,7 @@ function update() {
 update();
 
 // Game settings
-let numbers = "012345"
+let numbers = "123456"
 let letters = "abflqy";
 let stimuli = 6;
 let baseDelay = 1750;
@@ -321,9 +321,9 @@ function getGameCycle(n) {
     );
     
     // Light up the face and cast the shadow
-    wow(faces[currPos.symbol], "active", tileFlashTime);
-    if (faceShadows[currPos.symbol - 2]) {
-      wow(faceShadows[currPos.symbol - 2], "active", tileFlashTime);
+    wow(faces[currPos.symbol - 1], "active", tileFlashTime);
+    if (faceShadows[currPos.symbol - 3]) {
+      wow(faceShadows[currPos.symbol - 3], "active", tileFlashTime);
     }
     
     speak(sounds[i].symbol);
