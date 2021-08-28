@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>3D Dual N-back</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no">
+		<meta name="mobile-web-app-capable" content="yes">
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+		<link rel="stylesheet" href="styles.css">
+	</head>
+	<body>
+
+		<div class="scene-cube">
+			<div class="floor-cube">
+				<div class="cube-shadow"></div>
+				<div class="face-shadow left-shadow"></div>
+				<div class="face-shadow right-shadow"></div>
+				<div class="face-shadow front-shadow"></div>
+				<div class="face-shadow back-shadow"></div>
+			</div>
+			<div class="cube">
+				<div class="face top"></div>
+				<div class="face bottom"></div>
+				<div class="face left"></div>
+				<div class="face right"></div>
+				<div class="face front"></div>
+				<div class="face back"></div>
+			</div>
+		</div>
+		
+		<div class="scene-progress">
+			<div class="floor-progress">
+				<div class="progress-container-shadow"></div>
+				<div class="progress-bar-shadow"></div>
+			</div>
+			<div class="progress-container">
+				<div class="progress-top"></div>
+				<div class="progress-bottom"></div>
+				<div class="progress-left"></div>
+				<div class="progress-right"></div>
+				<div class="progress-front"></div>
+				<div class="progress-back"></div>
+			</div>
+			<div class="progress-bar">
+				<div class="progress-top"></div>
+				<div class="progress-bottom"></div>
+				<div class="progress-left"></div>
+				<div class="progress-right"></div>
+				<div class="progress-front"></div>
+				<div class="progress-back"></div>
+			</div>
+		</div>
+		
+		<button class="btn check-position">Pos (a)</button>
+		<button class="btn check-sound">Snd (l)</button>
+		<button class="btn play" onclick="play()">Play (s)</button>
+		<button class="btn stop active" onclick="stop()">Stop (k)</button>
+		
+		<label class="ctrl n-back" for="n-back">
+			N: <input id="n-back" type="number" value="2" min="1" max="9">
+		</label>
+		
+		<script src="main.js"></script>
+	</body>
+</html>
