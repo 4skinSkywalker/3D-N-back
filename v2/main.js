@@ -532,20 +532,7 @@ function interactionHandler(type) {
 sceneWrapper.addEventListener("mousedown", interactionHandler("mouse"));
 sceneWrapper.addEventListener("touchstart", interactionHandler("touch"));
 
-let tx = 0;
-let ty = 10000;
-let simplex = new SimplexNoise();
 function update() {
-  
-  // // Randomly move the camera when the user plays
-  // if (isRunning) {
-  //   let randomx = simplex.noise2D(0, tx) * 0.01;
-  //   let randomy = simplex.noise2D(0, ty) * 0.01;
-  //   ax += randomx;
-  //   ay += randomy;
-  //   tx += 0.01;
-  //   ty += 0.01;
-  // }
   
   vx += ax - vx * 0.1;
   vy += ay - vy * 0.1;
