@@ -1,0 +1,453 @@
+@import url('https://fonts.googleapis.com/css2?family=Nova+Square&display=swap');
+
+*, *::after {
+  box-sizing: border-box;
+}
+
+*:focus {
+  outline: none;
+}
+
+body {
+  margin: 0;
+  font-family: 'Nova Square', cursive;
+  font-size: 50px;
+  background: #000;
+  overflow: hidden;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 576px) {
+  body {
+    font-size: 40px;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.game-body {
+  perspective: 10em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  max-width: 1024px;
+  height: 100vh;
+  animation: fade-in 1s ease backwards;
+}
+
+.settings-wrapper {
+  position: absolute;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  transform: translateZ(1px);
+  width: 100vw;
+  height: 100vh;
+  color: #ffff;
+  background-color: #000f;
+  border-right: 1px solid #fff5;
+  animation: fade-in 1s ease backwards 2.5s;
+}
+
+.settings {
+  position: absolute;
+  display: grid;
+  align-content: space-evenly;
+  width: 100%;
+  height: 100%;
+  font-size: 18px;
+  overflow: hidden;
+}
+
+.setting {
+  display: grid;
+  padding: 12px;
+}
+
+.setting input[type="text"] {
+  padding: 8px;
+  border: 0;
+  border-bottom: 3px solid #ffff;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: right;
+  color: #ffff;
+  background-color: #0000;
+}
+
+.settings-wrapper label[for="settings-open"] {
+  position: absolute;
+  top: 4em;
+  left: 100%;
+  transform-origin: bottom left;
+  transform: rotateZ(90deg);
+  font-size: 32px;
+  white-space: nowrap;
+}
+
+#settings-open:not(:checked) ~ .settings-wrapper {
+  max-width: .25em;
+  transition: max-width .3s ease-in .3s;
+}
+
+#settings-open:checked ~ .settings-wrapper {
+  max-width: 320px;
+  transition: max-width .3s ease-out;
+}
+
+#settings-open:not(:checked) ~ .settings-wrapper .settings {
+  opacity: 0;
+  transition: opacity .3s ease-in;
+}
+
+#settings-open:checked ~ .settings-wrapper .settings {
+  opacity: 1;
+  transition: opacity .3s ease-out .3s;
+}
+
+#settings-open:not(:checked) ~ .settings-wrapper label[for="settings-open"]::after {
+  content: "Open Settings";
+}
+
+#settings-open:checked ~ .settings-wrapper label[for="settings-open"]::after {
+  content: "Close Settings";
+}
+
+.scene-wrapper {
+  position: absolute;
+  perspective: 10em;
+}
+
+.scene {
+  transform-style: preserve-3d;
+  transform:
+    rotateX(-30deg)
+    rotateY(45deg);
+}
+
+.floor {
+  position: absolute;
+  top: 2em;
+  width: 50em;
+  height: 50em;
+  background-image:
+    repeating-conic-gradient(
+      #111 0deg,
+      #111 90deg,
+      #444 90deg,
+      #444 180deg
+    );
+  background-size: 4em 4em;
+}
+
+.floor-bottom {
+  transform: translate3d(
+    calc(6em),
+    calc(-50%),
+    calc(31em)
+  )
+  rotateX(90deg);
+  opacity: 0;
+  animation: slidefloorbottom 1s ease forwards 1s;
+}
+
+@keyframes slidefloorbottom {
+  to {
+    opacity: 1;
+    transform: translate3d(
+      calc(-3em - 1px),
+      calc(-50% + 1px),
+      calc(22em - 1px)
+    )
+    rotateX(90deg);
+  }
+}
+
+.floor-left {
+  transform: translate3d(
+    calc(-28em),
+    calc(-100%),
+    calc(36em)
+  )
+  rotateY(90deg);
+  opacity: 0;
+  animation: slidefloorleft 1s ease forwards 1.5s;
+}
+
+@keyframes slidefloorleft {
+  to {
+    opacity: 1;
+    transform: translate3d(
+      calc(-28em - 1px),
+      calc(-100% + 1px),
+      calc(22em - 1px)
+    )
+    rotateY(90deg);
+  }
+}
+
+.floor-right {
+  transform: translate3d(
+    calc(14em),
+    calc(-100%),
+    calc(-3em)
+  );
+  opacity: 0;
+  animation: slidefloorright 1s ease forwards 2s;
+}
+
+@keyframes slidefloorright {
+  to {
+    opacity: 1;
+    transform: translate3d(
+      calc(-3em - 1px),
+      calc(-100% + 1px),
+      calc(-3em - 1px)
+    );
+  }
+}
+
+.cube {
+  position: absolute;
+  transform-style: preserve-3d;
+  transform: translate3d(-1em, -2em, 0);
+  width: 2em;
+  height: 2em;
+  transition: transform 1.5s ease;
+}
+
+.top, .bottom, .left, .right, .front, .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #fff5;
+  box-shadow: inset 0 0 2px #0008;
+  transition: background-color .2s ease;
+  animation: fade-in 1s ease backwards 2.5s;
+}
+
+.col-a {
+  background-color: #0f0f;
+}
+
+.col-b {
+  background-color: #00ff;
+}
+
+.col-c {
+  background-color: #ff0f;
+}
+
+.col-d {
+  background-color: #f0ff;
+}
+
+.col-e {
+  background-color: #0fff;
+}
+
+.col-f {
+  background-color: #f00f;
+}
+
+.top {
+  transform: 
+    translateY(-1em)
+    rotateX(-90deg);
+}
+
+.bottom {
+  transform:
+    translateY(1em)
+    rotateX(90deg);
+}
+
+.left {
+  transform:
+    translateX(-1em)
+    rotateY(90deg);
+}
+
+.right {
+  transform:
+    translateX(1em)
+    rotateY(-90deg);
+}
+
+.front {
+  transform: translateZ(1em);
+}
+
+.back {
+  transform: translateZ(-1em);
+}
+
+.btn {
+  width: 5.5em;
+  height: 3em;
+  padding: 0;
+  font-family: inherit;
+  font-size: 50%;
+  border: 0;
+  border-radius: .75em;
+  background-color: #fff6;
+  cursor: pointer;
+  transition:
+    background-color .3s ease,
+    box-shadow 1.2s ease;
+  animation: fade-in 1s ease backwards 2.5s;
+}
+
+.btn.right {
+  background-color: #0f0;
+  box-shadow: 0 0 1em #0f04;
+}
+
+.btn.wrong {
+  background-color: #f00;
+  box-shadow: 0 0 1em #f004;
+}
+
+.play, .stop {
+  position: absolute;
+  z-index: 100;
+  top: 3em;
+}
+
+.play.active {
+  box-shadow:
+    inset 0 0 .5em #0f08,
+    0 0 1em #0f04;
+}
+
+.stop.active {
+  box-shadow:
+    inset 0 0 .5em #f008,
+    0 0 1em #f004;
+}
+
+@media (max-width: 576px) {
+  .play, .stop {
+    top: 1em;
+  }
+}
+
+.play {
+  left: 1em;
+  transform:
+    rotateX(7.5deg)
+    rotateY(-5deg);
+  background-image:
+    linear-gradient(
+      135deg,
+      #0004,
+      #fff8
+    );
+}
+
+.stop {
+  right: 1em;
+  transform:
+    rotateX(7.5deg)
+    rotateY(5deg);
+  background-image:
+    linear-gradient(
+      -135deg,
+      #0004,
+      #fff8
+    );
+}
+
+.check-face, .check-sound {
+  position: absolute;
+  z-index: 100;
+  bottom: 7em;
+}
+
+.check-position, .check-color {
+  position: absolute;
+  z-index: 100;
+  bottom: 3em;
+}
+
+@media (max-width: 576px) {
+  .check-face, .check-sound {
+    bottom: 5em;
+  }
+  
+  .check-position, .check-color {
+    bottom: 1em;
+  }
+}
+
+.check-face, .check-position {
+  left: 1em;
+  transform:
+    rotateX(-7.5deg)
+    rotateY(-5deg);
+  background-image:
+    linear-gradient(
+      45deg,
+      #0004,
+      #fff8
+    );
+}
+
+.check-sound, .check-color {
+  right: 1em;
+  transform:
+    rotateX(-7.5deg)
+    rotateY(5deg);
+  background-image:
+    linear-gradient(
+      -45deg,
+      #0004,
+      #fff8
+    );
+}
+
+.n-back {
+  position: absolute;
+  top: 1.5em;
+  transform: translateZ(1em);
+  color: #ffff;
+  animation: fade-in 1s ease backwards .5s;
+}
+
+#n-back {
+  width: 1em;
+  border: 0;
+  font-family: inherit;
+  font-size: 100%;
+  color: #fff;
+  background-color: transparent;
+}
+
+#n-back:focus {
+  outline: 0;
+}
+
+@media (max-width: 576px) {
+  .n-back {
+    top: 2.5em;
+  }
+}
+
+.sign {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%) translateZ(1em);
+  font-size: 18px;
+  color: #fff;
+  text-decoration: none;
+}
