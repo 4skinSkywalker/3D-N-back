@@ -580,8 +580,8 @@ function update() {
     rx = -100;
   }
   
-  if (rx > 10) {
-    rx = 10;
+  if (rx > 0) {
+    rx = 0;
   }
   
   if (ry < -100) {
