@@ -11,7 +11,7 @@
 body {
   margin: 0;
   font-family: 'Nova Square', cursive;
-  font-size: 50px;
+  font-size: 40px;
   background: #000;
   overflow: hidden;
   user-select: none;
@@ -20,7 +20,7 @@ body {
 
 @media (max-width: 576px) {
   body {
-    font-size: 40px;
+    font-size: 32px;
   }
 }
 
@@ -34,7 +34,7 @@ body {
 }
 
 .game-body {
-  perspective: 10em;
+  perspective: 15em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,12 +86,18 @@ body {
 
 .settings-wrapper label[for="settings-open"] {
   position: absolute;
-  top: 4em;
+  top: 7em;
   left: 100%;
   transform-origin: bottom left;
   transform: rotateZ(90deg);
   font-size: 32px;
   white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+  .settings-wrapper label[for="settings-open"] {
+    font-size: 24px;
+  }
 }
 
 #settings-open:not(:checked) ~ .settings-wrapper {
@@ -124,7 +130,14 @@ body {
 
 .scene-wrapper {
   position: absolute;
-  perspective: 10em;
+  perspective: 12.5em;
+}
+
+@media (max-width: 576px) {
+  .scene-wrapper {
+    perspective: 20em;
+    transform: scale(.75)!important;
+  }
 }
 
 .scene {
@@ -137,22 +150,22 @@ body {
 .floor {
   position: absolute;
   top: 2em;
-  width: 50em;
-  height: 50em;
+  width: 54em;
+  height: 54em;
   background-image:
     repeating-conic-gradient(
       #111 0deg,
-      #111 90deg,
-      #444 90deg,
-      #444 180deg
+      #222 90deg,
+      #888 90deg,
+      #666 180deg
     );
-  background-size: 4em 4em;
+  background-size: 6em 6em;
 }
 
 .floor-bottom {
   transform: translate3d(
     calc(6em),
-    calc(-50%),
+    calc(-26.5em),
     calc(31em)
   )
   rotateX(90deg);
@@ -164,9 +177,9 @@ body {
   to {
     opacity: 1;
     transform: translate3d(
-      calc(-3em - 1px),
-      calc(-50% + 1px),
-      calc(22em - 1px)
+      calc(-4em),
+      calc(-26.5em),
+      calc(23em)
     )
     rotateX(90deg);
   }
@@ -174,8 +187,8 @@ body {
 
 .floor-left {
   transform: translate3d(
-    calc(-28em),
-    calc(-100%),
+    calc(-31em),
+    calc(-47.5em),
     calc(36em)
   )
   rotateY(90deg);
@@ -187,9 +200,9 @@ body {
   to {
     opacity: 1;
     transform: translate3d(
-      calc(-28em - 1px),
-      calc(-100% + 1px),
-      calc(22em - 1px)
+      calc(-31em),
+      calc(-47.5em),
+      calc(23em)
     )
     rotateY(90deg);
   }
@@ -198,8 +211,8 @@ body {
 .floor-right {
   transform: translate3d(
     calc(14em),
-    calc(-100%),
-    calc(-3em)
+    calc(-50.5em),
+    calc(-4em)
   );
   opacity: 0;
   animation: slidefloorright 1s ease forwards 2s;
@@ -209,9 +222,9 @@ body {
   to {
     opacity: 1;
     transform: translate3d(
-      calc(-3em - 1px),
-      calc(-100% + 1px),
-      calc(-3em - 1px)
+      calc(-4em - 1px),
+      calc(-50.5em + 1px),
+      calc(-4em - 1px)
     );
   }
 }
@@ -219,7 +232,7 @@ body {
 .cube {
   position: absolute;
   transform-style: preserve-3d;
-  transform: translate3d(-1em, -2em, 0);
+  transform: translate3d(-0.5em, -3em, 0.5em);
   width: 2em;
   height: 2em;
   transition: transform 1.5s ease;
@@ -229,8 +242,8 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #fff5;
-  box-shadow: inset 0 0 2px #0008;
+  background-color: #fff1;
+  box-shadow: inset 0 0 2px #ffff;
   transition: background-color .2s ease;
   animation: fade-in 1s ease backwards 2.5s;
 }

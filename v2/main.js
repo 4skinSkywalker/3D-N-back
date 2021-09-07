@@ -21,18 +21,19 @@ let nextLevelThresholdInput = document.querySelector("#nextLevelThreshold");
 // Game settings
 let numbers = "123456"
 let letters = "abflqy";
+let initialPosition = "-.5,-3,.5";
 let moves = [
-  "-3,  0, -2", "-1,  0, -2", "1,  0, -2",
-  "-3,  0,  0", "-1,  0,  0", "1,  0,  0",
-  "-3,  0,  2", "-1,  0,  2", "1,  0,  2",
+  "-3.5,0,-2.5", "-.5,0,-2.5", "2.5,0,-2.5",
+  "-3.5,0,.5", "-.5,0,.5", "2.5,0,.5",
+  "-3.5,0,3.5", "-.5,0,3.5", "2.5,0,3.5",
   
-  "-3, -2, -2", "-1, -2, -2", "1, -2, -2",
-  "-3, -2,  0",               "1, -2,  0",
-  "-3, -2,  2", "-1, -2,  2", "1, -2,  2",
+  "-3.5,-3,-2.5", "-.5,-3,-2", "2.5,-3,-2.5",
+  "-3.5,-3,.5", ".5,-3,.5",
+  "-3.5,-3,3.5", "-.5,-3,3.5", "2.5,-3,3.5",
   
-  "-3, -4, -2", "-1, -4, -2", "1, -4, -2",
-  "-3, -4,  0", "-1, -4,  0", "1, -4,  0",
-  "-3, -4,  2", "-1, -4,  2", "1, -4,  2"
+  "-3.5,-6,-2.5", "-.5,-6,-2", "2.5,-6,-2.5",
+  "-3.5,-6,.5", "-.5,-6,.5", "2.5,-6,.5",
+  "-3.5,-6,3.5", "-.5,-6,3.5", "2.5,-6,3.5"
 ];
 let colorClasses = [
   "col-a", "col-b", "col-c", "col-d", "col-e", "col-f"
@@ -57,7 +58,7 @@ baseDelayInput.addEventListener("input", () =>
   baseDelay = +baseDelayInput.value
 );
 
-let cumulativeDelay = 500;sceneWrapper
+let cumulativeDelay = 500;
 cumulativeDelayInput.value = cumulativeDelay;
 cumulativeDelayInput.addEventListener("input", () =>
   cumulativeDelay = +cumulativeDelayInput.value
@@ -204,7 +205,7 @@ function resetBlock() {
   currPosition = null;
   currColor = null;
   
-  move(cube, "-1, -2,  0");
+  move(cube, null, initialPosition);
   
   checkSoundBtn.classList.remove("right", "wrong");
   checkFaceBtn.classList.remove("right", "wrong");
@@ -218,10 +219,40 @@ function resetIntervals() {
   );
 }
 
-function move(el, posString) {
-  let [x, y, z] = posString.split(",")
-    .map(x => x.trim());
-  el.style.transform = `translate3d(${x}em, ${y}em, ${z}em)`;
+let prevCubeZRot = 0;
+let prevCubeYRot = 0;
+let prevCubeXRot = 0;
+function move(el, prevPosString, currPosString) {
+  prevPosString = prevPosString || initialPosition;
+  let [px, py, pz] = prevPosString.split(",");
+  let [cx, cy, cz] = currPosString.split(",");
+  
+  // Calc direction to set cube rotation
+  let dz = cx - px;
+  let crz = (Math.abs(dz) === 1) ? 90 : 180;
+  crz = Math.sign(dz) * crz;
+  
+  let dy = py - cy;
+  let cry = (Math.abs(dy) === 1) ? 90 : 180;
+  cry = Math.sign(dy) * cry;
+  
+  let dx = pz - cz;
+  let crx = (Math.abs(dx) === 1) ? 90 : 180;
+  crx = Math.sign(dx) * crx;
+  
+  if (dz !== 0 && dx === 0) {
+    prevCubeZRot += crz;
+  }
+  
+  if (dy !== 0 && dx === 0 && dz === 0) {
+    prevCubeYRot += cry;
+  }
+  
+  if (dx !== 0 && dz === 0) {
+    prevCubeXRot += crx;
+  }
+  
+  el.style.transform = `translate3d(${cx}em, ${cy}em, ${cz}em) rotateZ(${prevCubeZRot}deg) rotateY(${prevCubeYRot}deg) rotateX(${prevCubeXRot}deg)`;
 }
 
 function wow(htmlElement, cssClass, delay) {
@@ -302,7 +333,9 @@ function getGameCycle(n) {
     
     wow(faceEls[currFace.symbol - 1], currColor.symbol, tileFlashTime);
     speak(currSound.symbol);
-    move(cube, currPosition.symbol);
+    
+    let prevPosition = (positions[i-1] || {});
+    move(cube, prevPosition.symbol, currPosition.symbol);
     
     // Increase block index
     i++;
