@@ -18,6 +18,13 @@ let tileFlashTimeInput = document.querySelector("#tileFlashTime");
 let previousLevelThresholdInput = document.querySelector("#previousLevelThreshold");
 let nextLevelThresholdInput = document.querySelector("#nextLevelThreshold");
 
+let [
+  faceEnableTrig,
+  positionEnableTrig,
+  soundEnableTrig,
+  colorEnableTrig
+] = [...document.querySelectorAll(".toggle-trigger")];
+
 // Game settings
 let numbers = "123456"
 let letters = "abflqy";
@@ -38,6 +45,51 @@ let moves = [
 let colorClasses = [
   "col-a", "col-b", "col-c", "col-d", "col-e", "col-f"
 ];
+
+let faceEnabled = true;
+faceEnableTrig.checked = faceEnabled;
+faceEnableTrig.addEventListener("input", () =>
+  (
+    faceEnabled = !faceEnabled,
+    !faceEnabled ?
+      checkFaceBtn.style.display = "none" :
+      checkFaceBtn.style.display = "inline-block",
+    checkFaceBtn.style.animationDelay = "0s"
+  )
+);
+let soundEnabled = true;
+soundEnableTrig.checked = faceEnabled;
+soundEnableTrig.addEventListener("input", () =>
+  (
+    soundEnabled = !soundEnabled,
+    !soundEnabled ?
+      checkSoundBtn.style.display = "none" :
+      checkSoundBtn.style.display = "inline-block",
+    checkSoundBtn.style.animationDelay = "0s"
+  )
+);
+let positionEnabled = true;
+positionEnableTrig.checked = faceEnabled;
+positionEnableTrig.addEventListener("input", () =>
+  (
+    positionEnabled = !positionEnabled,
+    !positionEnabled ?
+      checkPositionBtn.style.display = "none" :
+      checkPositionBtn.style.display = "inline-block",
+    checkPositionBtn.style.animationDelay = "0s"
+  )
+);
+let colorEnabled = true;
+colorEnableTrig.checked = faceEnabled;
+colorEnableTrig.addEventListener("input", () =>
+  (
+    colorEnabled = !colorEnabled,
+    !colorEnabled ?
+      checkColorBtn.style.display = "none" :
+      checkColorBtn.style.display = "inline-block",
+    checkColorBtn.style.animationDelay = "0s"
+  )
+);
 
 // Editable settings
 let targetNumOfStimuli = 5;
@@ -136,7 +188,7 @@ function createBlocks(symbols, n) {
     }
     // Put the signal
     blocks[rnd] = {
-      isMatching: false,
+      isMatching: undefined, // I'll have to figure out if it's matching
       symbol: symbol
     };
     blocks[rnd + n] = {
@@ -147,11 +199,20 @@ function createBlocks(symbols, n) {
   }
   // Place noise
   for (let i = 0; i < blocks.length; i++) {
-    if (blocks[i]) {
+    if (blocks[i] && blocks[i].isMatching) {
       continue;
     }
     let prev = blocks[i - n];
     let next = blocks[i + n];
+    if (blocks[i] && blocks[i].isMatching === undefined) {
+      if (prev && prev.symbol === blocks[i].symbol) {
+        blocks[i].isMatching = true;
+        matchingStimuli++;
+      } else {
+        blocks[i].isMatching = false;
+      }
+      continue;
+    }
     // Pick noise
     let noise = random(symbols);
     // Place noise
@@ -272,10 +333,25 @@ function speak(text) {
 
 function getGameCycle(n) {
   
-  let faces = createBlocks(numbers, n);
-  let sounds = createBlocks(letters, n);
-  let positions = createBlocks(moves, n);
-  let colors = createBlocks(colorClasses, n);
+  let faces;
+  if (faceEnabled) {
+    faces = createBlocks(numbers, n);
+  }
+  
+  let sounds;
+  if (soundEnabled) {
+    sounds = createBlocks(letters, n);
+  }
+  
+  let positions;
+  if (positionEnabled) {
+    positions = createBlocks(moves, n);
+  }
+  
+  let colors;
+  if (colorEnabled) {
+    colors = createBlocks(colorClasses, n);
+  }
   
   let i = 0;
   return function() {
@@ -286,15 +362,40 @@ function getGameCycle(n) {
       return;
     }
     
+    let length = targetNumOfStimuli * (n + 2) + targetNumOfStimuli;
+    
     // End game
-    if (i > faces.length - 1) {
+    if (i > length - 1) {
       
-      // Save scores before stopping
-      console.log("Correct stimuli", rightFace, rightSound, rightPosition, rightColor);
-      let percentage = (rightFace + rightSound + rightPosition + rightColor) / matchingStimuli;
-      let mistakes = wrongFace + wrongSound + wrongPosition + wrongColor;
-      console.log("Mistakes", mistakes);
-      let errorThreshold = matchingStimuli / 4;
+      let percentage = 0;
+      if (faceEnabled) {
+        percentage += rightFace;
+      }
+      if (soundEnabled) {
+        percentage += rightSound;
+      }
+      if (positionEnabled) {
+        percentage += rightPosition;
+      }
+      if (colorEnabled) {
+        percentage += rightColor;
+      }
+      percentage /= matchingStimuli;
+      
+      let mistakes = 0;
+      if (faceEnabled) {
+        mistakes += wrongFace;
+      }
+      if (soundEnabled) {
+        mistakes += wrongSound;
+      }
+      if (positionEnabled) {
+        mistakes += wrongPosition;
+      }
+      if (colorEnabled) {
+        mistakes += wrongColor;
+      };
+      let errorThreshold = matchingStimuli * 0.4;
       
       stop();
       
@@ -323,19 +424,30 @@ function getGameCycle(n) {
     
     // Operations
     
-    currFace = faces[i];
-    currSound = sounds[i];
-    currPosition = positions[i];
-    currColor = colors[i];
-    
     // Count stimulus
     stimuliCount++;
     
-    wow(faceEls[currFace.symbol - 1], currColor.symbol, tileFlashTime);
-    speak(currSound.symbol);
-    
-    let prevPosition = (positions[i-1] || {});
-    move(cube, prevPosition.symbol, currPosition.symbol);
+    if (faceEnabled) {
+      currFace = faces[i];
+      if (colorEnabled) {
+        currColor = colors[i];
+        wow(faceEls[currFace.symbol - 1], currColor.symbol, tileFlashTime);
+      } else {
+        wow(faceEls[currFace.symbol - 1], "col-a", tileFlashTime);
+      }
+    } else if (colorEnabled) {
+      currColor = colors[i];
+      wow(faceEls[0], currColor.symbol, tileFlashTime);
+    }
+    if (soundEnabled) {
+      currSound = sounds[i];
+      speak(currSound.symbol);
+    }
+    if (positionEnabled) {
+      currPosition = positions[i];
+      let prevPosition = (positions[i-1] || {});
+      move(cube, prevPosition.symbol, currPosition.symbol);
+    }
     
     // Increase block index
     i++;

@@ -8,6 +8,23 @@
   outline: none;
 }
 
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background-image: linear-gradient(
+90deg, #000, #2f2f2f, #bdbdbd, #b9b9b9);
+  border-radius: 1em;
+}
+
+::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(
+90deg, #6d6d6d, white, #5c5c5c, black);
+  border-left: 1px solid #000;
+  border-radius: 1em;
+}
+
 body {
   margin: 0;
   font-family: 'Nova Square', cursive;
@@ -61,16 +78,35 @@ body {
 .settings {
   position: absolute;
   display: grid;
-  align-content: space-evenly;
   width: 100%;
   height: 100%;
   font-size: 18px;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .setting {
   display: grid;
   padding: 12px;
+}
+
+.subsettings-list {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 8px;
+}
+
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border: 2px solid #888;
+  border-radius: 1em;
+  cursor: pointer;
+}
+
+.toggle-trigger:checked + .toggle-btn {
+  color: #000;
+  background-color: #fff;
 }
 
 .setting input[type="text"] {
