@@ -11,6 +11,8 @@ let checkPositionBtn = document.querySelector(".check-position");
 let checkColorBtn = document.querySelector(".check-color");
 
 let nBackInput = document.querySelector("#n-back");
+let zoomInput = document.querySelector("#zoom");
+let perspectiveInput = document.querySelector("#perspective");
 let targetStimuliInput = document.querySelector("#targetStimuli");
 let gameStartDelayInput = document.querySelector("#gameStartDelay");
 let baseDelayInput = document.querySelector("#baseDelay");
@@ -110,6 +112,20 @@ colorEnableTrig.addEventListener("input", () =>
 );
 
 // Editable settings
+let zoom = 0.7;
+zoomInput.value = zoom;
+zoomInput.addEventListener("input", () => {
+  zoom = +zoomInput.value;
+  sceneWrapper.style.transform = `scale(${zoom})`;
+});
+
+let perspective = 15;
+perspectiveInput.value = perspective;
+perspectiveInput.addEventListener("input", () => {
+  perspective = +perspectiveInput.value;
+  sceneWrapper.style.perspective = `${perspective}em`;
+});
+
 let targetNumOfStimuli = 5;
 targetStimuliInput.value = targetNumOfStimuli;
 targetStimuliInput.addEventListener("input", () =>

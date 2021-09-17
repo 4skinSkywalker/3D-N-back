@@ -167,15 +167,8 @@ body {
 
 .scene-wrapper {
   position: absolute;
-  perspective: 12.5em;
-  transform: scale(.8)
-}
-
-@media (max-width: 576px) {
-  .scene-wrapper {
-    perspective: 20em;
-    transform: scale(.75)!important;
-  }
+  perspective: 15em;
+  transform: scale(.7);
 }
 
 .scene {
