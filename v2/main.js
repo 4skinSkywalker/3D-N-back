@@ -4,6 +4,7 @@ let scene = document.querySelector(".scene");
 let cube = document.querySelector(".cube");
 let faceEls = document.querySelectorAll(".face");
 
+let checkCameraBtn = document.querySelector(".check-camera");
 let checkFaceBtn = document.querySelector(".check-face");
 let checkSoundBtn = document.querySelector(".check-sound");
 let checkPositionBtn = document.querySelector(".check-position");
@@ -19,6 +20,7 @@ let previousLevelThresholdInput = document.querySelector("#previousLevelThreshol
 let nextLevelThresholdInput = document.querySelector("#nextLevelThreshold");
 
 let [
+  cameraEnableTrig,
   faceEnableTrig,
   positionEnableTrig,
   soundEnableTrig,
@@ -26,12 +28,17 @@ let [
 ] = [...document.querySelectorAll(".toggle-trigger")];
 
 // Game settings
-let numbers = "123456"
+let points = [
+  "-70&0", "-70&-45", "-70&-90",
+  "-40&0",            "-40&-90",
+  "-10&0", "-10&-45", "-10&-90"
+]; // I know this is ugly AF...
+let numbers = "123456";
 let letters = "abflqy";
 let initialPosition = "-.5,-3,.5";
 let moves = [
   "-3.5,0,-2.5", "-.5,0,-2.5", "2.5,0,-2.5",
-  "-3.5,0,.5", "-.5,0,.5", "2.5,0,.5",
+  "-3.5,0,.5",       "-.5,0,.5", "2.5,0,.5",
   "-3.5,0,3.5", "-.5,0,3.5", "2.5,0,3.5",
   
   "-3.5,-3,-2.5", "-.5,-3,-2", "2.5,-3,-2.5",
@@ -46,6 +53,17 @@ let colorClasses = [
   "col-a", "col-b", "col-c", "col-d", "col-e", "col-f"
 ];
 
+let cameraEnabled = true;
+cameraEnableTrig.checked = cameraEnabled;
+cameraEnableTrig.addEventListener("input", () =>
+  (
+    cameraEnabled = !faceEnabled,
+    !cameraEnabled ?
+      checkCameraBtn.style.display = "none" :
+      checkCameraBtn.style.display = "inline-block",
+    checkCameraBtn.style.animationDelay = "0s"
+  )
+);
 let faceEnabled = true;
 faceEnableTrig.checked = faceEnabled;
 faceEnableTrig.addEventListener("input", () =>
@@ -141,21 +159,25 @@ let intervals = [];
 
 let isRunning = false;
 
+let enableCameraCheck = true;
 let enableFaceCheck = true;
 let enableSoundCheck = true;
 let enablePositionCheck = true;
 let enableColorCheck = true;
 
+let currCamera;
 let currFace;
 let currSound;
 let currPosition;
 let currColor;
 
+let rightCamera = 0;
 let rightFace = 0;
 let rightSound = 0;
 let rightPosition = 0;
 let rightColor = 0;
 
+let wrongCamera = 0;
 let wrongFace = 0;
 let wrongSound = 0;
 let wrongPosition = 0;
@@ -240,27 +262,30 @@ function createBlocks(symbols, n) {
 function resetPoints() {
   matchingStimuli = 0;
   
+  rightCamera = 0;
   rightFace = 0;
   rightSound = 0;
   rightPosition = 0;
   rightColor = 0;
   
+  wrongCamera = 0;
   wrongFace = 0;
   wrongSound = 0;
   wrongPosition = 0;
   wrongColor = 0;
   
   // Also resets the camera
-  rx = -30;
-  ry = -45;
+  scene.style.transform = `rotateX(${-9}deg) rotateY(${-45}deg)`;
 }
 
 function resetBlock() {
+  enableCameraCheck = true;
   enableFaceCheck = true;
   enableSoundCheck = true;
   enablePositionCheck = true;
   enableColorCheck = true;
   
+  currCamera = null;
   currFace = null;
   currSound = null;
   currPosition = null;
@@ -268,8 +293,9 @@ function resetBlock() {
   
   move(cube, null, initialPosition);
   
-  checkSoundBtn.classList.remove("right", "wrong");
+  checkCameraBtn.classList.remove("right", "wrong");
   checkFaceBtn.classList.remove("right", "wrong");
+  checkSoundBtn.classList.remove("right", "wrong");
   checkPositionBtn.classList.remove("right", "wrong");
   checkColorBtn.classList.remove("right", "wrong");
 }
@@ -333,6 +359,11 @@ function speak(text) {
 
 function getGameCycle(n) {
   
+  let cameras;
+  if (cameraEnabled) {
+    cameras = createBlocks(points, n);
+  }
+  
   let faces;
   if (faceEnabled) {
     faces = createBlocks(numbers, n);
@@ -368,6 +399,9 @@ function getGameCycle(n) {
     if (i > length - 1) {
       
       let percentage = 0;
+      if (cameraEnabled) {
+        percentage += rightCamera;
+      }
       if (faceEnabled) {
         percentage += rightFace;
       }
@@ -383,6 +417,9 @@ function getGameCycle(n) {
       percentage /= matchingStimuli;
       
       let mistakes = 0;
+      if (cameraEnabled) {
+        mistakes += wrongCamera;
+      }
       if (faceEnabled) {
         mistakes += wrongFace;
       }
@@ -427,6 +464,11 @@ function getGameCycle(n) {
     // Count stimulus
     stimuliCount++;
     
+    if (cameraEnabled) {
+      currCamera = cameras[i];
+      let [cx, cy] = currCamera.symbol.split("&");
+      scene.style.transform = `rotateX(${cx}deg) rotateY(${cy}deg)`;
+    }
     if (faceEnabled) {
       currFace = faces[i];
       if (colorEnabled) {
@@ -499,7 +541,11 @@ function checkHandler(sense) {
   let enable;
   
   // This part is garbage but hey I've used single vars xD
-  if (sense === "face") {
+  if (sense === "camera") {
+    curr = currCamera;
+    button = checkCameraBtn;
+    enable = enableCameraCheck;
+  } else if (sense === "face") {
     curr = currFace;
     button = checkFaceBtn;
     enable = enableFaceCheck;
@@ -521,7 +567,9 @@ function checkHandler(sense) {
     return;
   }
   
-  if (sense === "face") {
+  if (sense === "camera") {
+    enableCameraCheck = false;
+  } else if (sense === "face") {
     enableFaceCheck = false;
   } else if (sense === "sound") {
     enableSoundCheck = false;
@@ -531,9 +579,13 @@ function checkHandler(sense) {
     enableColorCheck = false;
   }
   
+  console.log(sense, curr, button, enable);
+  
   if (curr.isMatching) {
     
-    if (sense === "face") {
+    if (sense === "camera") {
+      rightCamera++;
+    } else if (sense === "face") {
       rightFace++;
     } else if (sense === "sound") {
       rightSound++;
@@ -546,7 +598,9 @@ function checkHandler(sense) {
     button.classList.add("right");
   } else {
     
-    if (sense === "face") {
+    if (sense === "camera") {
+      wrongCamera++;
+    } else if (sense === "face") {
       wrongFace++;
     } else if (sense === "sound") {
       wrongSound++;
@@ -560,7 +614,7 @@ function checkHandler(sense) {
   }
 }
 
-["face", "sound", "position", "color"]
+["camera", "face", "sound", "position", "color"]
   .forEach(sense => {
     document.querySelector(".check-" + sense)
       .addEventListener(
@@ -577,7 +631,9 @@ function checkHandler(sense) {
 document.addEventListener(
   "keypress",
   evt => {
-    if (evt.code === "KeyF") {
+    if (evt.code === "KeyS") {
+      checkHandler("camera");
+    } else if (evt.code === "KeyF") {
       checkHandler("face");
     } else if (evt.code === "KeyJ") {
       checkHandler("sound");
@@ -592,129 +648,3 @@ document.addEventListener(
     }
   }
 );
-
-let zoom = 1;
-
-// Position
-let rx = -30;
-let ry = -45;
-
-// Velocity
-let vx = 0;
-let vy = 0;
-
-// Acceleration
-let ax = 0;
-let ay = 0;
-
-let keyRot = {
-  "ArrowUp": () => ax += 1,
-  "ArrowDown": () => ax -= 1,
-  "ArrowLeft": () => ay -= 1,
-  "ArrowRight": () => ay += 1
-};
-
-sceneWrapper.addEventListener("wheel", evt =>
-  zoom -= evt.deltaY * 0.001
-);
-
-document.addEventListener("keydown", evt => {
-  if (evt.code in keyRot) {
-    keyRot[evt.code]();
-  }
-});
-
-function interactionHandler(type) {
-  return function(evt) {
-    
-    let prevX;
-    let prevY;
-    if (type === "mouse") {
-      prevX = evt.pageX;
-      prevY = evt.pageY;
-    } else if (type === "touch") {
-      prevX = evt.changedTouches[0].pageX;
-      prevY = evt.changedTouches[0].pageY;
-    }
-
-    function moveHandler(evt) {
-      
-      let x;
-      let y;
-      if (type === "mouse") {
-        x = evt.pageX;
-        y = evt.pageY;
-      } else if (type === "touch") {
-        x = evt.changedTouches[0].pageX;
-        y = evt.changedTouches[0].pageY;
-      }
-
-      let dx = x - prevX;
-      let dy = prevY - y;
-
-      ax += dy * 0.01;
-      ay += dx * 0.01;
-
-      prevX = x;
-      prevY = y;
-    }
-
-    if (type === "mouse") {
-      document.addEventListener("mousemove", moveHandler);
-      document.addEventListener("mouseup", () =>
-        document.removeEventListener("mousemove", moveHandler)
-      );
-    } else if (type === "touch") {
-      document.addEventListener("touchmove", moveHandler);
-      document.addEventListener("touchend", () =>
-        document.removeEventListener("touchmove", moveHandler)
-      );
-    }
-
-  }
-}
-
-sceneWrapper.addEventListener("mousedown", interactionHandler("mouse"));
-sceneWrapper.addEventListener("touchstart", interactionHandler("touch"));
-
-function update() {
-  
-  vx += ax - vx * 0.1;
-  vy += ay - vy * 0.1;
-  
-  rx += vx;
-  ry += vy;
-  
-  ax = 0;
-  ay = 0;
-  
-  if (rx < -100) {
-    rx = -100;
-  }
-  
-  if (rx > 0) {
-    rx = 0;
-  }
-  
-  if (ry < -100) {
-    ry = -100;
-  }
-  
-  if (ry > 10) {
-    ry = 10;
-  }
-  
-  if (zoom < 0.5) {
-    zoom = 0.5;
-  }
-  
-  if (zoom > 3) {
-    zoom = 3;
-  }
-  
-  scene.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-  sceneWrapper.style.transform = `scale(${zoom})`;
-  window.requestAnimationFrame(update);
-}
-
-update();

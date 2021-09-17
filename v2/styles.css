@@ -90,8 +90,9 @@ body {
 }
 
 .subsettings-list {
-  display: flex;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: .5em;
   margin-top: 8px;
 }
 
@@ -122,7 +123,7 @@ body {
 
 .settings-wrapper label[for="settings-open"] {
   position: absolute;
-  top: 7em;
+  top: 4.5em;
   left: 100%;
   transform-origin: bottom left;
   transform: rotateZ(90deg);
@@ -142,7 +143,7 @@ body {
 }
 
 #settings-open:checked ~ .settings-wrapper {
-  max-width: 320px;
+  max-width: 313px;
   transition: max-width .3s ease-out;
 }
 
@@ -167,6 +168,7 @@ body {
 .scene-wrapper {
   position: absolute;
   perspective: 12.5em;
+  transform: scale(.8)
 }
 
 @media (max-width: 576px) {
@@ -179,8 +181,9 @@ body {
 .scene {
   transform-style: preserve-3d;
   transform:
-    rotateX(-30deg)
-    rotateY(45deg);
+    rotateX(-40deg)
+    rotateY(-45deg);
+  transition: transform 2s ease;
 }
 
 .floor {
@@ -271,7 +274,7 @@ body {
   transform: translate3d(-0.5em, -3em, 0.5em);
   width: 2em;
   height: 2em;
-  transition: transform 1.5s ease;
+  transition: transform 2s ease;
 }
 
 .top, .bottom, .left, .right, .front, .back {
@@ -416,6 +419,12 @@ body {
     );
 }
 
+.check-camera {
+  position: absolute;
+  z-index: 100;
+  bottom: 11em;
+}
+
 .check-face, .check-sound {
   position: absolute;
   z-index: 100;
@@ -429,6 +438,10 @@ body {
 }
 
 @media (max-width: 576px) {
+  .check-camera {
+    bottom: 9em;
+  }
+  
   .check-face, .check-sound {
     bottom: 5em;
   }
@@ -438,7 +451,7 @@ body {
   }
 }
 
-.check-face, .check-position {
+.check-camera, .check-face, .check-position {
   left: 1em;
   transform:
     rotateX(-7.5deg)

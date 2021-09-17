@@ -14,81 +14,84 @@
 
 	<input hidden id="settings-open" type="checkbox">
 	<div class="settings-wrapper">
-		<label for="settings-open"></label>
-		<div class="settings">
-			<div class="setting">
-				<label>Enable Stimuli</label>
-				<div class="subsettings-list">
-					<input class="toggle-trigger" hidden id="enable-face" type="checkbox" checked>
-					<label class="toggle-btn" for="enable-face">Face</label>
-					<input class="toggle-trigger" hidden id="enable-spatial" type="checkbox" checked>
-					<label class="toggle-btn" for="enable-spatial">Spatial</label>
-					<input class="toggle-trigger" hidden id="enable-sound" type="checkbox" checked>
-					<label class="toggle-btn" for="enable-sound">Sound</label>
-					<input class="toggle-trigger" hidden id="enable-color" type="checkbox" checked>
-					<label class="toggle-btn" for="enable-color">Color</label>
-				</div>
-			</div>
-			<div class="setting">
-				<label>Target Stimuli</label>
-				<input id="targetStimuli" type="text" placeholder="9">
-			</div>
-			<div class="setting">
-				<label>Game Start Delay (ms)</label>
-				<input id="gameStartDelay" type="text" placeholder="1000ms">
-			</div>
-			<div class="setting">
-				<label>Base Delay (ms)</label>
-				<input id="baseDelay" type="text" placeholder="1000ms">
-			</div>
-			<div class="setting">
-				<label>Cumulative Delay (ms)</label>
-				<input id="cumulativeDelay" type="text" placeholder="100ms">
-			</div>
-			<div class="setting">
-				<label>Tile Flash Time (ms)</label>
-				<input id="tileFlashTime" type="text" placeholder="100ms">
-			</div>
-			<div class="setting">
-				<label>Previous Level Threshold (%)</label>
-				<input id="previousLevelThreshold" type="text" placeholder="40%">
-			</div>
-			<div class="setting">
-				<label>Next Level Threshold (%)</label>
-				<input id="nextLevelThreshold" type="text" placeholder="80%">
-			</div>
+	<label for="settings-open"></label>
+	<div class="settings">
+		<div class="setting">
+		<label>Enable Stimuli</label>
+		<div class="subsettings-list">
+			<input class="toggle-trigger" hidden id="enable-camera" type="checkbox" checked>
+			<label class="toggle-btn" for="enable-camera">Camera</label>
+			<input class="toggle-trigger" hidden id="enable-face" type="checkbox" checked>
+			<label class="toggle-btn" for="enable-face">Face</label>
+			<input class="toggle-trigger" hidden id="enable-spatial" type="checkbox" checked>
+			<label class="toggle-btn" for="enable-spatial">Spatial</label>
+			<input class="toggle-trigger" hidden id="enable-sound" type="checkbox" checked>
+			<label class="toggle-btn" for="enable-sound">Sound</label>
+			<input class="toggle-trigger" hidden id="enable-color" type="checkbox" checked>
+			<label class="toggle-btn" for="enable-color">Color</label>
 		</div>
+		</div>
+		<div class="setting">
+		<label>Target Stimuli</label>
+		<input id="targetStimuli" type="text" placeholder="9">
+		</div>
+		<div class="setting">
+		<label>Game Start Delay (ms)</label>
+		<input id="gameStartDelay" type="text" placeholder="1000ms">
+		</div>
+		<div class="setting">
+		<label>Base Delay (ms)</label>
+		<input id="baseDelay" type="text" placeholder="1000ms">
+		</div>
+		<div class="setting">
+		<label>Cumulative Delay (ms)</label>
+		<input id="cumulativeDelay" type="text" placeholder="100ms">
+		</div>
+		<div class="setting">
+		<label>Tile Flash Time (ms)</label>
+		<input id="tileFlashTime" type="text" placeholder="100ms">
+		</div>
+		<div class="setting">
+		<label>Previous Level Threshold (%)</label>
+		<input id="previousLevelThreshold" type="text" placeholder="40%">
+		</div>
+		<div class="setting">
+		<label>Next Level Threshold (%)</label>
+		<input id="nextLevelThreshold" type="text" placeholder="80%">
+		</div>
+	</div>  
 	</div>
 
 	<div class="game-body">
-		<div class="scene-wrapper">
-			<div class="scene">
-				<div class="floor floor-bottom"></div>
-				<div class="floor floor-left"></div>
-				<div class="floor floor-right"></div>
-				<div class="cube">
-					<div class="face top"></div>
-					<div class="face bottom"></div>
-					<div class="face left"></div>
-					<div class="face right"></div>
-					<div class="face front"></div>
-					<div class="face back"></div>
-				</div>
-			</div>
+	<div class="scene-wrapper">
+		<div class="scene">
+		<div class="floor floor-bottom"></div>
+		<div class="floor floor-left"></div>
+		<div class="floor floor-right"></div>
+		<div class="cube">
+			<div class="face top"></div>
+			<div class="face bottom"></div>
+			<div class="face left"></div>
+			<div class="face right"></div>
+			<div class="face front"></div>
+			<div class="face back"></div>
 		</div>
+		</div>
+	</div>
 
-		<button class="btn check-face">Face (f)</button>
-		<button class="btn check-sound">Sound (j)</button>
-		<button class="btn check-position">Spatial (d)</button>
-		<button class="btn check-color">Color (k)</button>
-		<button class="btn play" onclick="play()">Play (q)</button>
-		<button class="btn stop active" onclick="stop()">Stop (p)</button>
+	<button class="btn check-camera">Camera (s)</button>
+	<button class="btn check-face">Face (f)</button>
+	<button class="btn check-sound">Sound (j)</button>
+	<button class="btn check-position">Spatial (d)</button>
+	<button class="btn check-color">Color (k)</button>
+	<button class="btn play" onclick="play()">Play (q)</button>
+	<button class="btn stop active" onclick="stop()">Stop (p)</button>
 
-		<label class="ctrl n-back" for="n-back">
-			N: <input id="n-back" type="number" value="1" min="1" max="9">
-		</label>
+	<label class="ctrl n-back" for="n-back">
+		N: <input id="n-back" type="number" value="1" min="1" max="9">
+	</label>
 
-		<a class="sign" href="https://www.linkedin.com/in/f3d3r1c07r0774/">@LinkedIn</a>
+	<a class="sign" href="https://www.linkedin.com/in/f3d3r1c07r0774/">@LinkedIn</a>
 	</div>
 
 	<script src="main.js"></script>
