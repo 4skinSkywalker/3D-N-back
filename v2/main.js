@@ -1,6 +1,8 @@
 let sceneWrapper = document.querySelector(".scene-wrapper");
 let scene = document.querySelector(".scene");
 
+let floors = [...document.querySelectorAll(".floor")];
+
 let cube = document.querySelector(".cube");
 let faceEls = document.querySelectorAll(".face");
 
@@ -11,6 +13,7 @@ let checkPositionBtn = document.querySelector(".check-position");
 let checkColorBtn = document.querySelector(".check-color");
 
 let nBackInput = document.querySelector("#n-back");
+let sceneDimmerInput = document.querySelector("#scene-dimmer");
 let zoomInput = document.querySelector("#zoom");
 let perspectiveInput = document.querySelector("#perspective");
 let targetStimuliInput = document.querySelector("#targetStimuli");
@@ -122,6 +125,92 @@ rotationEnableTrig.checked = rotationEnabled;
 rotationEnableTrig.addEventListener("input", () =>
   rotationEnabled = !rotationEnabled
 );
+
+function setFloorBackground(floor, dimPercent, tileAHexColor, tileBHexColor) {
+  if (dimPercent > 1) {
+    dimPercent = 1;
+  }
+  let hexSymbols = "0123456789abcdef";
+  let hexBrightness = hexSymbols[
+    Math.floor(dimPercent * (hexSymbols.length - 1))
+  ];
+  if (floor.classList.contains("floor-bottom")) {
+    floor.style.backgroundImage = `linear-gradient(
+  #000${hexBrightness},
+  #000${hexBrightness}
+),
+radial-gradient(
+  at 0 0,
+  #0000,
+  20%,
+  #000
+),
+repeating-conic-gradient(
+  ${tileAHexColor} 0deg,
+  ${tileAHexColor} 90deg,
+  ${tileBHexColor} 90deg,
+  ${tileBHexColor} 180deg
+)`;
+  } else if (floor.classList.contains("floor-left")) {
+    floor.style.backgroundImage = `linear-gradient(
+  #000${hexBrightness},
+  #000${hexBrightness}
+),
+radial-gradient(
+  at 53.5em 53.5em,
+  #0000,
+  20%,
+  #000
+),
+repeating-conic-gradient(
+  ${tileAHexColor} 0deg,
+  ${tileAHexColor} 90deg,
+  ${tileBHexColor} 90deg,
+  ${tileBHexColor} 180deg
+)`;
+  } else {
+    floor.style.backgroundImage = `linear-gradient(
+  #000${hexBrightness},
+  #000${hexBrightness}
+),
+radial-gradient(
+  at 0 53.5em,
+  #0000,
+  20%,
+  #000
+),
+repeating-conic-gradient(
+  ${tileBHexColor} 0deg,
+  ${tileBHexColor} 90deg,
+  ${tileAHexColor} 90deg,
+  ${tileAHexColor} 180deg
+)`;
+  }
+}
+
+let tileAHexColor = "#111";
+let tileBHexColor = "#888";
+let sceneDimmer = 0.5;
+sceneDimmerInput.value = sceneDimmer;
+floors.forEach(floor =>
+    setFloorBackground(
+      floor,
+      sceneDimmer,
+      tileAHexColor,
+      tileBHexColor
+    )
+  );
+sceneDimmerInput.addEventListener("input", () => {
+  sceneDimmer = +sceneDimmerInput.value;
+  floors.forEach(floor =>
+    setFloorBackground(
+      floor,
+      sceneDimmer,
+      tileAHexColor,
+      tileBHexColor
+    )
+  );
+});
 
 let zoom = 0.7;
 zoomInput.value = zoom;

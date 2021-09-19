@@ -185,7 +185,7 @@ body {
   top: 2em;
   width: 54em;
   height: 54em;
-  background-size: 100%, 6em 6em;
+  background-size: 100%, 100%, 6em 6em;
 }
 
 .floor::after {
@@ -203,14 +203,6 @@ body {
       31em
     )
     rotateX(90deg);
-  background-image:
-    radial-gradient(at 0 0, #0000, 20%, #000),
-    repeating-conic-gradient(
-      #111 0deg,
-      #111 90deg,
-      #bbb 90deg,
-      #bbb 180deg
-    );
   opacity: 0;
   animation: slidefloorbottom 1s ease forwards 1s;
 }
@@ -234,14 +226,6 @@ body {
       36em
     )
     rotateY(90deg);
-  background-image:
-    radial-gradient(at 53.5em 53.5em, #0000, 20%, #000),
-    repeating-conic-gradient(
-      #111 0deg,
-      #111 90deg,
-      #bbb 90deg,
-      #bbb 180deg
-    );
   opacity: 0;
   animation: slidefloorleft 1s ease forwards 1.5s;
 }
@@ -264,14 +248,6 @@ body {
     -53.5em,
     -4em
   );
-  background-image:
-    radial-gradient(at 0 53.5em, #0000, 20%, #000),
-    repeating-conic-gradient(
-      #bbb 0deg,
-      #bbb 90deg,
-      #111 90deg,
-      #111 180deg
-    );
   opacity: 0;
   animation: slidefloorright 1s ease forwards 2s;
 }
