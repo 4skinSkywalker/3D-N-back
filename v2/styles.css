@@ -98,6 +98,7 @@ body {
 
 .toggle-btn {
   display: flex;
+  justify-content: center;
   align-items: center;
   padding: 8px;
   border: 2px solid #888;
@@ -184,23 +185,32 @@ body {
   top: 2em;
   width: 54em;
   height: 54em;
-  background-image:
-    repeating-conic-gradient(
-      #111 0deg,
-      #222 90deg,
-      #888 90deg,
-      #666 180deg
-    );
-  background-size: 6em 6em;
+  background-size: 100%, 6em 6em;
 }
 
-.floor-bottom {
+.floor::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(3px);
+}
+
+.floor.floor-bottom {
   transform: translate3d(
-    calc(6em),
-    calc(-26.5em),
-    calc(31em)
-  )
-  rotateX(90deg);
+      6em,
+      -26.5em,
+      31em
+    )
+    rotateX(90deg);
+  background-image:
+    radial-gradient(at 0 0, #0000, 20%, #000),
+    repeating-conic-gradient(
+      #111 0deg,
+      #111 90deg,
+      #bbb 90deg,
+      #bbb 180deg
+    );
   opacity: 0;
   animation: slidefloorbottom 1s ease forwards 1s;
 }
@@ -209,21 +219,29 @@ body {
   to {
     opacity: 1;
     transform: translate3d(
-      calc(-4em),
-      calc(-26.5em),
-      calc(23em)
-    )
-    rotateX(90deg);
+        -4em,
+        -26.5em,
+        23em
+      )
+      rotateX(90deg);
   }
 }
 
-.floor-left {
+.floor.floor-left {
   transform: translate3d(
-    calc(-31em),
-    calc(-47.5em),
-    calc(36em)
-  )
-  rotateY(90deg);
+      -31em,
+      -53.5em,
+      36em
+    )
+    rotateY(90deg);
+  background-image:
+    radial-gradient(at 53.5em 53.5em, #0000, 20%, #000),
+    repeating-conic-gradient(
+      #111 0deg,
+      #111 90deg,
+      #bbb 90deg,
+      #bbb 180deg
+    );
   opacity: 0;
   animation: slidefloorleft 1s ease forwards 1.5s;
 }
@@ -232,20 +250,28 @@ body {
   to {
     opacity: 1;
     transform: translate3d(
-      calc(-31em),
-      calc(-47.5em),
-      calc(23em)
-    )
-    rotateY(90deg);
+        -31em,
+        -53.5em,
+        23em
+      )
+      rotateY(90deg);
   }
 }
 
-.floor-right {
+.floor.floor-right {
   transform: translate3d(
-    calc(14em),
-    calc(-50.5em),
-    calc(-4em)
+    14em,
+    -53.5em,
+    -4em
   );
+  background-image:
+    radial-gradient(at 0 53.5em, #0000, 20%, #000),
+    repeating-conic-gradient(
+      #bbb 0deg,
+      #bbb 90deg,
+      #111 90deg,
+      #111 180deg
+    );
   opacity: 0;
   animation: slidefloorright 1s ease forwards 2s;
 }
@@ -254,9 +280,9 @@ body {
   to {
     opacity: 1;
     transform: translate3d(
-      calc(-4em - 1px),
-      calc(-50.5em + 1px),
-      calc(-4em - 1px)
+      -4em,
+      -53.5em,
+      -4em
     );
   }
 }
@@ -275,6 +301,7 @@ body {
   width: 100%;
   height: 100%;
   background-color: #fff1;
+  outline: 1px solid #ffff;
   box-shadow: inset 0 0 2px #ffff;
   transition: background-color .2s ease;
   animation: fade-in 1s ease backwards 2.5s;

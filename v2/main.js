@@ -26,7 +26,8 @@ let [
   faceEnableTrig,
   positionEnableTrig,
   soundEnableTrig,
-  colorEnableTrig
+  colorEnableTrig,
+  rotationEnableTrig
 ] = [...document.querySelectorAll(".toggle-trigger")];
 
 // Game settings
@@ -55,6 +56,7 @@ let colorClasses = [
   "col-a", "col-b", "col-c", "col-d", "col-e", "col-f"
 ];
 
+// Editable settings
 let cameraEnabled = true;
 cameraEnableTrig.checked = cameraEnabled;
 cameraEnableTrig.addEventListener("input", () =>
@@ -66,6 +68,7 @@ cameraEnableTrig.addEventListener("input", () =>
     checkCameraBtn.style.animationDelay = "0s"
   )
 );
+
 let faceEnabled = true;
 faceEnableTrig.checked = faceEnabled;
 faceEnableTrig.addEventListener("input", () =>
@@ -77,6 +80,7 @@ faceEnableTrig.addEventListener("input", () =>
     checkFaceBtn.style.animationDelay = "0s"
   )
 );
+
 let soundEnabled = true;
 soundEnableTrig.checked = faceEnabled;
 soundEnableTrig.addEventListener("input", () =>
@@ -88,6 +92,7 @@ soundEnableTrig.addEventListener("input", () =>
     checkSoundBtn.style.animationDelay = "0s"
   )
 );
+
 let positionEnabled = true;
 positionEnableTrig.checked = faceEnabled;
 positionEnableTrig.addEventListener("input", () =>
@@ -99,6 +104,7 @@ positionEnableTrig.addEventListener("input", () =>
     checkPositionBtn.style.animationDelay = "0s"
   )
 );
+
 let colorEnabled = true;
 colorEnableTrig.checked = faceEnabled;
 colorEnableTrig.addEventListener("input", () =>
@@ -111,7 +117,12 @@ colorEnableTrig.addEventListener("input", () =>
   )
 );
 
-// Editable settings
+let rotationEnabled = false;
+rotationEnableTrig.checked = rotationEnabled;
+rotationEnableTrig.addEventListener("input", () =>
+  rotationEnabled = !rotationEnabled
+);
+
 let zoom = 0.7;
 zoomInput.value = zoom;
 zoomInput.addEventListener("input", () => {
@@ -331,28 +342,30 @@ function move(el, prevPosString, currPosString) {
   let [cx, cy, cz] = currPosString.split(",");
   
   // Calc direction to set cube rotation
-  let dz = cx - px;
-  let crz = (Math.abs(dz) === 1) ? 90 : 180;
-  crz = Math.sign(dz) * crz;
-  
-  let dy = py - cy;
-  let cry = (Math.abs(dy) === 1) ? 90 : 180;
-  cry = Math.sign(dy) * cry;
-  
-  let dx = pz - cz;
-  let crx = (Math.abs(dx) === 1) ? 90 : 180;
-  crx = Math.sign(dx) * crx;
-  
-  if (dz !== 0 && dx === 0) {
-    prevCubeZRot += crz;
-  }
-  
-  if (dy !== 0 && dx === 0 && dz === 0) {
-    prevCubeYRot += cry;
-  }
-  
-  if (dx !== 0 && dz === 0) {
-    prevCubeXRot += crx;
+  if (rotationEnabled) {
+    let dz = cx - px;
+    let crz = (Math.abs(dz) === 1) ? 90 : 180;
+    crz = Math.sign(dz) * crz;
+
+    let dy = py - cy;
+    let cry = (Math.abs(dy) === 1) ? 90 : 180;
+    cry = Math.sign(dy) * cry;
+
+    let dx = pz - cz;
+    let crx = (Math.abs(dx) === 1) ? 90 : 180;
+    crx = Math.sign(dx) * crx;
+
+    if (dz !== 0 && dx === 0) {
+      prevCubeZRot += crz;
+    }
+
+    if (dy !== 0 && dx === 0 && dz === 0) {
+      prevCubeYRot += cry;
+    }
+
+    if (dx !== 0 && dz === 0) {
+      prevCubeXRot += crx;
+    }
   }
   
   el.style.transform = `translate3d(${cx}em, ${cy}em, ${cz}em) rotateZ(${prevCubeZRot}deg) rotateY(${prevCubeYRot}deg) rotateX(${prevCubeXRot}deg)`;
