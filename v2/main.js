@@ -4,8 +4,12 @@ let scene = document.querySelector(".scene");
 let floors = [...document.querySelectorAll(".floor")];
 
 let cube = document.querySelector(".cube");
-let faceEls = document.querySelectorAll(".face");
+let faceEls = [...document.querySelectorAll(".cube > .face")];
 
+let innerCube = document.querySelector(".inner-cube");
+let innerFaceEls = [...document.querySelectorAll(".inner-cube > .face")];
+
+let checkCornerBtn = document.querySelector(".check-corner");
 let checkCameraBtn = document.querySelector(".check-camera");
 let checkFaceBtn = document.querySelector(".check-face");
 let checkSoundBtn = document.querySelector(".check-sound");
@@ -25,6 +29,7 @@ let previousLevelThresholdInput = document.querySelector("#previousLevelThreshol
 let nextLevelThresholdInput = document.querySelector("#nextLevelThreshold");
 
 let [
+  cornerEnableTrig,
   cameraEnableTrig,
   faceEnableTrig,
   positionEnableTrig,
@@ -41,7 +46,7 @@ let points = [
 ]; // I know this is ugly AF...
 let numbers = "123456";
 let letters = "abflqy";
-let initialPosition = "-.5,-3,.5";
+let initialCubePosition = "-.5,-3,.5";
 let moves = [
   "-3.5,0,-2.5", "-.5,0,-2.5", "2.5,0,-2.5",
   "-3.5,0,.5",       "-.5,0,.5", "2.5,0,.5",
@@ -55,11 +60,43 @@ let moves = [
   "-3.5,-6,.5", "-.5,-6,.5", "2.5,-6,.5",
   "-3.5,-6,3.5", "-.5,-6,3.5", "2.5,-6,3.5"
 ];
+let initialInnerCubePosition = ".5,.5,0";
+let cornersList = [
+  "0,0,.5",
+  "0,0,-.5",
+  "1,0,-.5",
+  "1,0,.5",
+  
+  "0,1,.5",
+  "0,1,-.5",
+  "1,1,-.5",
+  "1,1,.5"
+];
 let colorClasses = [
   "col-a", "col-b", "col-c", "col-d", "col-e", "col-f"
 ];
 
 // Editable settings
+// This piece of code is a bit confusing I know...
+let cornerEnabled = true;
+cornerEnableTrig.checked = cornerEnabled;
+cornerEnableTrig.addEventListener("input", () =>
+  (
+    cornerEnabled = !cornerEnabled,
+    !cornerEnabled ?
+      (
+        innerCube.style.display = "none",
+        checkCornerBtn.style.display = "none"
+      ) :
+      (
+        innerCube.style.display = "block",
+        checkCornerBtn.style.display = "inline-block"
+      ),
+    innerFaceEls.forEach(face => face.style.animationDelay = "0s"),
+    checkCornerBtn.style.animationDelay = "0s"
+  )
+);
+
 let cameraEnabled = true;
 cameraEnableTrig.checked = cameraEnabled;
 cameraEnableTrig.addEventListener("input", () =>
@@ -275,24 +312,28 @@ let intervals = [];
 
 let isRunning = false;
 
+let enableCornerCheck = true;
 let enableCameraCheck = true;
 let enableFaceCheck = true;
 let enableSoundCheck = true;
 let enablePositionCheck = true;
 let enableColorCheck = true;
 
+let currCorner;
 let currCamera;
 let currFace;
 let currSound;
 let currPosition;
 let currColor;
 
+let rightCorner = 0;
 let rightCamera = 0;
 let rightFace = 0;
 let rightSound = 0;
 let rightPosition = 0;
 let rightColor = 0;
 
+let wrongCorner = 0;
 let wrongCamera = 0;
 let wrongFace = 0;
 let wrongSound = 0;
@@ -378,37 +419,41 @@ function createBlocks(symbols, n) {
 function resetPoints() {
   matchingStimuli = 0;
   
+  rightCorner = 0;
   rightCamera = 0;
   rightFace = 0;
   rightSound = 0;
   rightPosition = 0;
   rightColor = 0;
   
+  wrongCorner = 0;
   wrongCamera = 0;
   wrongFace = 0;
   wrongSound = 0;
   wrongPosition = 0;
   wrongColor = 0;
   
-  // Also resets the camera
-  scene.style.transform = `rotateX(${-9}deg) rotateY(${-45}deg)`;
+  move(cube, initialCubePosition, initialCubePosition);
+  move(innerCube, initialInnerCubePosition, initialInnerCubePosition);
+  scene.style.transform = "rotateX(-40deg) rotateY(-45deg)";
 }
 
 function resetBlock() {
+  enableCornerCheck = true;
   enableCameraCheck = true;
   enableFaceCheck = true;
   enableSoundCheck = true;
   enablePositionCheck = true;
   enableColorCheck = true;
   
+  currCorner = null;
   currCamera = null;
   currFace = null;
   currSound = null;
   currPosition = null;
   currColor = null;
   
-  move(cube, null, initialPosition);
-  
+  checkCornerBtn.classList.remove("right", "wrong");
   checkCameraBtn.classList.remove("right", "wrong");
   checkFaceBtn.classList.remove("right", "wrong");
   checkSoundBtn.classList.remove("right", "wrong");
@@ -426,7 +471,9 @@ let prevCubeZRot = 0;
 let prevCubeYRot = 0;
 let prevCubeXRot = 0;
 function move(el, prevPosString, currPosString) {
-  prevPosString = prevPosString || initialPosition;
+  
+  console.log(el, prevPosString, currPosString);
+  
   let [px, py, pz] = prevPosString.split(",");
   let [cx, cy, cz] = currPosString.split(",");
   
@@ -477,6 +524,11 @@ function speak(text) {
 
 function getGameCycle(n) {
   
+  let corners;
+  if (cornerEnabled) {
+    corners = createBlocks(cornersList, n);
+  }
+  
   let cameras;
   if (cameraEnabled) {
     cameras = createBlocks(points, n);
@@ -517,6 +569,9 @@ function getGameCycle(n) {
     if (i > length - 1) {
       
       let percentage = 0;
+      if (cornerEnabled) {
+        percentage += rightCorner;
+      }
       if (cameraEnabled) {
         percentage += rightCamera;
       }
@@ -535,6 +590,9 @@ function getGameCycle(n) {
       percentage /= matchingStimuli;
       
       let mistakes = 0;
+      if (cornerEnabled) {
+        mistakes += wrongCorner;
+      }
       if (cameraEnabled) {
         mistakes += wrongCamera;
       }
@@ -582,6 +640,15 @@ function getGameCycle(n) {
     // Count stimulus
     stimuliCount++;
     
+    if (cornerEnabled) {
+      currCorner = corners[i];
+      let prevCorner = (corners[i-1] || { symbol: initialInnerCubePosition });
+      move(
+        innerCube,
+        prevCorner.symbol,
+        currCorner.symbol
+      );
+    }
     if (cameraEnabled) {
       currCamera = cameras[i];
       let [cx, cy] = currCamera.symbol.split("&");
@@ -605,8 +672,12 @@ function getGameCycle(n) {
     }
     if (positionEnabled) {
       currPosition = positions[i];
-      let prevPosition = (positions[i-1] || {});
-      move(cube, prevPosition.symbol, currPosition.symbol);
+      let prevPosition = (positions[i-1] || { symbol: initialCubePosition });
+      move(
+        cube,
+        prevPosition.symbol,
+        currPosition.symbol
+      );
     }
     
     // Increase block index
@@ -659,7 +730,11 @@ function checkHandler(sense) {
   let enable;
   
   // This part is garbage but hey I've used single vars xD
-  if (sense === "camera") {
+  if (sense === "corner") {
+    curr = currCorner;
+    button = checkCornerBtn;
+    enable = enableCornerCheck;
+  } else if (sense === "camera") {
     curr = currCamera;
     button = checkCameraBtn;
     enable = enableCameraCheck;
@@ -685,7 +760,9 @@ function checkHandler(sense) {
     return;
   }
   
-  if (sense === "camera") {
+  if (sense === "corner") {
+    enableCornerCheck = false;
+  } else if (sense === "camera") {
     enableCameraCheck = false;
   } else if (sense === "face") {
     enableFaceCheck = false;
@@ -701,7 +778,9 @@ function checkHandler(sense) {
   
   if (curr.isMatching) {
     
-    if (sense === "camera") {
+    if (sense === "corner") {
+      rightCorner++;
+    } else if (sense === "camera") {
       rightCamera++;
     } else if (sense === "face") {
       rightFace++;
@@ -716,7 +795,9 @@ function checkHandler(sense) {
     button.classList.add("right");
   } else {
     
-    if (sense === "camera") {
+    if (sense === "corner") {
+      wrongCorner++;
+    } else if (sense === "camera") {
       wrongCamera++;
     } else if (sense === "face") {
       wrongFace++;
@@ -732,7 +813,7 @@ function checkHandler(sense) {
   }
 }
 
-["camera", "face", "sound", "position", "color"]
+["corner", "camera", "face", "sound", "position", "color"]
   .forEach(sense => {
     document.querySelector(".check-" + sense)
       .addEventListener(
@@ -749,15 +830,17 @@ function checkHandler(sense) {
 document.addEventListener(
   "keypress",
   evt => {
-    if (evt.code === "KeyS") {
+    if (evt.code === "KeyJ") {
+      checkHandler("corner");
+    } else if (evt.code === "KeyS") {
       checkHandler("camera");
-    } else if (evt.code === "KeyF") {
-      checkHandler("face");
-    } else if (evt.code === "KeyJ") {
-      checkHandler("sound");
     } else if (evt.code === "KeyD") {
-      checkHandler("position");
+      checkHandler("face");
     } else if (evt.code === "KeyK") {
+      checkHandler("sound");
+    } else if (evt.code === "KeyF") {
+      checkHandler("position");
+    } else if (evt.code === "KeyL") {
       checkHandler("color");
     } else if (evt.code === "KeyQ") {
       play();
