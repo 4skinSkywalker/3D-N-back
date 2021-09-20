@@ -128,8 +128,14 @@ body {
   left: 100%;
   transform-origin: bottom left;
   transform: rotateZ(90deg);
+  padding: .15em .3em;
   font-size: 32px;
   white-space: nowrap;
+  background: #000;
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color: #ddd;
+  border-radius: 1em 1em 0 0;
 }
 
 @media (max-width: 576px) {
@@ -139,7 +145,7 @@ body {
 }
 
 #settings-open:not(:checked) ~ .settings-wrapper {
-  max-width: .25em;
+  max-width: 0;
   transition: max-width .3s ease-in .3s;
 }
 
@@ -159,11 +165,11 @@ body {
 }
 
 #settings-open:not(:checked) ~ .settings-wrapper label[for="settings-open"]::after {
-  content: "Open Settings";
+  content: "🔧";
 }
 
 #settings-open:checked ~ .settings-wrapper label[for="settings-open"]::after {
-  content: "Close Settings";
+  content: "✖️";
 }
 
 .scene-wrapper {
