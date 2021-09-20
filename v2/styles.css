@@ -188,13 +188,13 @@ body {
   background-size: 100%, 100%, 6em 6em;
 }
 
-.floor::after {
+/* .floor::after {
   content: "";
   position: absolute;
   width: 100%;
   height: 100%;
   backdrop-filter: blur(3px);
-}
+} */
 
 .floor.floor-bottom {
   transform: translate3d(
