@@ -265,7 +265,7 @@ perspectiveInput.addEventListener("input", () => {
   sceneWrapper.style.perspective = `${perspective}em`;
 });
 
-let targetNumOfStimuli = 5;
+let targetNumOfStimuli = 10;
 targetStimuliInput.value = targetNumOfStimuli;
 targetStimuliInput.addEventListener("input", () =>
   targetNumOfStimuli = +targetStimuliInput.value
@@ -301,7 +301,7 @@ previousLevelThresholdInput.addEventListener("input", () =>
   prevLevelThreshold = +previousLevelThresholdInput.value / 100
 );
 
-let nextLevelThreshold = 0.8;
+let nextLevelThreshold = 0.9;
 nextLevelThresholdInput.value = nextLevelThreshold * 100;
 nextLevelThresholdInput.addEventListener("input", () =>
   nextLevelThreshold = +nextLevelThresholdInput.value / 100
@@ -610,7 +610,8 @@ function getGameCycle(n) {
       if (colorEnabled) {
         mistakes += wrongColor;
       };
-      let errorThreshold = matchingStimuli * 0.4;
+      let errorThresholdUpper = 1; // old one: matchingStimuli * 0.4;
+      let errorThresholdLower = 3;
       
       stop();
       
@@ -618,13 +619,13 @@ function getGameCycle(n) {
         .onend = function () {
           if (
             percentage >= nextLevelThreshold
-            && mistakes <= errorThreshold
+            && mistakes <= errorThresholdUpper
             && +nBackInput.value < 9
           ) {
             speak("Congratulations! Advancing to the next level.");
             nBackInput.value = +nBackInput.value + 1;
           } else if (
-            (percentage <= prevLevelThreshold || mistakes > errorThreshold)
+            (percentage <= prevLevelThreshold || mistakes > errorThresholdLower)
             && +nBackInput.value > 1
           ) {
             speak("Going back to the previous level. Keep training, you'll get better.");
