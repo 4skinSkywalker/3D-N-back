@@ -176,8 +176,9 @@ function setFloorBackground(floor, dimPercent, tileAHexColor, tileBHexColor) {
   #000${hexBrightness}
 ),
 radial-gradient(
-  at 0 0,
+  at 0px 0px,
   #0000,
+  #0000 15%,
   20%,
   #000
 ),
@@ -195,6 +196,7 @@ repeating-conic-gradient(
 radial-gradient(
   at 53.5em 53.5em,
   #0000,
+  #0000 15%,
   20%,
   #000
 ),
@@ -212,6 +214,7 @@ repeating-conic-gradient(
 radial-gradient(
   at 0 53.5em,
   #0000,
+  #0000 15%,
   20%,
   #000
 ),

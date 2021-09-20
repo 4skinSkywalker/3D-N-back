@@ -128,7 +128,7 @@ body {
   left: 100%;
   transform-origin: bottom left;
   transform: rotateZ(90deg);
-  padding: .15em .3em;
+  padding: .3em .15em;
   font-size: 32px;
   white-space: nowrap;
   background: #000;
