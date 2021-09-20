@@ -19,25 +19,21 @@
 		<div class="setting">
 		<label>Enable Stimuli</label>
 		<div class="subsettings-list">
-			<input class="toggle-trigger" hidden id="enable-corner" type="checkbox" checked>
-			<label class="toggle-btn" for="enable-corner">Corner</label>
 			<input class="toggle-trigger" hidden id="enable-camera" type="checkbox" checked>
 			<label class="toggle-btn" for="enable-camera">Camera</label>
 			<input class="toggle-trigger" hidden id="enable-face" type="checkbox" checked>
 			<label class="toggle-btn" for="enable-face">Face</label>
 			<input class="toggle-trigger" hidden id="enable-spatial" type="checkbox" checked>
 			<label class="toggle-btn" for="enable-spatial">Spatial</label>
+			
+			<input class="toggle-trigger" hidden id="enable-shape" type="checkbox" checked>
+			<label class="toggle-btn" for="enable-shape">Shape</label>
+			<input class="toggle-trigger" hidden id="enable-corner" type="checkbox" checked>
+			<label class="toggle-btn" for="enable-corner">Corner</label>
 			<input class="toggle-trigger" hidden id="enable-sound" type="checkbox" checked>
 			<label class="toggle-btn" for="enable-sound">Sound</label>
 			<input class="toggle-trigger" hidden id="enable-color" type="checkbox" checked>
 			<label class="toggle-btn" for="enable-color">Color</label>
-		</div>
-		</div>
-		<div class="setting">
-		<label>Enable Rotation</label>
-		<div class="subsettings-list">
-			<input class="toggle-trigger" hidden id="enable-rotation" type="checkbox" checked>
-			<label class="toggle-btn" for="enable-rotation">&#8634;</label>
 		</div>
 		</div>
 		<div class="setting">
@@ -98,6 +94,7 @@
 			<div class="face back"></div>
 			
 			<div class="inner-cube">
+			<div class="shape"></div>
 			<div class="face top"></div>
 			<div class="face bottom"></div>
 			<div class="face left"></div>
@@ -110,11 +107,13 @@
 		</div>
 	</div>
 
-	<button class="btn check-corner">Corner (j)</button>
 	<button class="btn check-camera">Camera (s)</button>
 	<button class="btn check-face">Face (d)</button>
-	<button class="btn check-sound">Sound (k)</button>
 	<button class="btn check-position">Spatial (f)</button>
+	
+	<button class="btn check-shape">Shape (h)</button>
+	<button class="btn check-corner">Corner (j)</button>
+	<button class="btn check-sound">Sound (k)</button>
 	<button class="btn check-color">Color (l)</button>
 	<button class="btn play" onclick="play()">Play (q)</button>
 	<button class="btn stop active" onclick="stop()">Stop (p)</button>

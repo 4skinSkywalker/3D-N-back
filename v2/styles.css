@@ -111,6 +111,10 @@ body {
   background-color: #fff;
 }
 
+.toggle-trigger:disabled + .toggle-btn {
+  opacity: .25;
+}
+
 .setting input[type="text"] {
   padding: 8px;
   border: 0;
@@ -180,9 +184,7 @@ body {
 
 .scene {
   transform-style: preserve-3d;
-  transform:
-    rotateX(-40deg)
-    rotateY(-45deg);
+  transform: rotateX(-40deg) rotateY(-45deg);
   transition: transform 2s ease;
 }
 
@@ -368,9 +370,9 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #fff8;
-  outline: 1px solid #000f;
-  box-shadow: inset 0 0 2px #000f;
+  background-color: #fff4;
+  outline: 1px solid #000a;
+  box-shadow: inset 0 0 2px #000a;
   animation: fade-in 1s ease backwards 3s;
 }
 
@@ -404,6 +406,40 @@ body {
 
 .inner-cube > .back {
   transform: translateZ(-.5em);
+}
+
+.shape {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateY(45deg) rotateX(40deg);
+  width: 0;
+  height: 0;
+  border: 1px solid #0000;
+  background-color: #0000;
+  transition: all .3s ease,
+              transform 2s ease;
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  border-left: .4em solid transparent;
+  border-right: .4em solid transparent;
+  border-bottom: .8em solid #fff;
+}
+
+.square {
+  width: .8em;
+  height: .8em;
+  background-color: #fff;
+}
+
+.circle {
+  width: .8em;
+  height: .8em;
+  background-color: #fff;
+  border-radius: 50%;
 }
 
 .btn {
@@ -482,6 +518,12 @@ body {
     );
 }
 
+.check-shape {
+  position: absolute;
+  z-index: 100;
+  bottom: 15em;
+}
+
 .check-camera, .check-corner {
   position: absolute;
   z-index: 100;
@@ -501,6 +543,10 @@ body {
 }
 
 @media (max-width: 576px) {
+  .check-shape {
+    bottom: 13em;
+  }
+  
   .check-camera, .check-corner {
     bottom: 9em;
   }
@@ -527,7 +573,7 @@ body {
     );
 }
 
-.check-corner, .check-sound, .check-color {
+.check-shape, .check-corner, .check-sound, .check-color {
   right: 1em;
   transform:
     rotateX(-7.5deg)
