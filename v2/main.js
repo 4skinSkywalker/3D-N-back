@@ -11,10 +11,15 @@ let innerFaceEls = [...document.querySelectorAll(".inner-cube > .face")];
 
 let shape = document.querySelector(".shape");
 
+let wallColors = [...document.querySelectorAll('[class^="wall"][class$="color"]')];
+let wallWords = [...document.querySelectorAll('[class^="wall"][class$="word"]')];
+
+let checkWallsBtn = document.querySelector(".check-walls");
 let checkCameraBtn = document.querySelector(".check-camera");
 let checkFaceBtn = document.querySelector(".check-face");
 let checkPositionBtn = document.querySelector(".check-position");
 
+let checkWordBtn = document.querySelector(".check-word");
 let checkShapeBtn = document.querySelector(".check-shape");
 let checkCornerBtn = document.querySelector(".check-corner");
 let checkSoundBtn = document.querySelector(".check-sound");
@@ -33,48 +38,84 @@ let previousLevelThresholdInput = document.querySelector("#previousLevelThreshol
 let nextLevelThresholdInput = document.querySelector("#nextLevelThreshold");
 
 let [
+  wallsEnableTrig,
   cameraEnableTrig,
   faceEnableTrig,
   positionEnableTrig,
+  wordEnableTrig,
   shapeEnableTrig,
   cornerEnableTrig,
   soundEnableTrig,
   colorEnableTrig
 ] = [...document.querySelectorAll(".toggle-trigger")];
 
+console.log(
+  wallsEnableTrig,
+  cameraEnableTrig,
+  faceEnableTrig,
+  positionEnableTrig,
+  wordEnableTrig,
+  shapeEnableTrig,
+  cornerEnableTrig,
+  soundEnableTrig,
+  colorEnableTrig
+);
+
 // Game settings
+let wallColorsList = [
+  "#00b894",
+  "#0984e3",
+  "#6c5ce7",
+  "#fdcb6e",
+  "#d63031",
+  "#e84393"
+];
 let points = [
   "-60&0", "-60&-45", "-60&-90",
   "-20&0", "-20&-45", "-20&-90"
 ]; // I know this is ugly AF...
 let numbers = "123456";
-let initialCubePosition = "-.5,-3,.5";
+let initialCubePosition = "-.5em, -3em, .5em";
 let moves = [
-  "-3.5,0,-2.5", "-.5,0,-2.5", "2.5,0,-2.5",
-  "-3.5,0,.5",       "-.5,0,.5", "2.5,0,.5",
-  "-3.5,0,3.5", "-.5,0,3.5", "2.5,0,3.5",
+  "-3.5em, 0, -2.5em", "-.5em, 0, -2.5em", "2.5em, 0, -2.5em",
+  "-3.5em, 0, .5em", "-.5em, 0, .5em", "2.5em, 0, .5em",
+  "-3.5em, 0, 3.5em", "-.5em, 0, 3.5em", "2.5em, 0, 3.5em",
   
-  "-3.5,-3,-2.5", "-.5,-3,-2", "2.5,-3,-2.5",
-  "-3.5,-3,.5", "2.5,-3,.5",
-  "-3.5,-3,3.5", "-.5,-3,3.5", "2.5,-3,3.5",
+  "-3.5em, -3em, -2.5em", "-.5em, -3em, -2.5em", "2.5em, -3em, -2.5em",
+  "-3.5em, -3em, .5em", "2.5em, -3em, .5em",
+  "-3.5em, -3em, 3.5em", "-.5em, -3em, 3.5em", "2.5em, -3em, 3.5em",
   
-  "-3.5,-6,-2.5", "-.5,-6,-2", "2.5,-6,-2.5",
-  "-3.5,-6,.5", "-.5,-6,.5", "2.5,-6,.5",
-  "-3.5,-6,3.5", "-.5,-6,3.5", "2.5,-6,3.5"
+  "-3.5em, -6em, -2.5em", "-.5em, -6em, -2.5em", "2.5em, -6em, -2.5em",
+  "-3.5em, -6em, .5em", "-.5em, -6em, .5em", "2.5em, -6em, .5em",
+  "-3.5em, -6em, 3.5em", "-.5em, -6em, 3.5em", "2.5em, -6em, 3.5em"
 ];
 
+let wordsList = [
+  "forest",
+  "desert",
+  "island",
+  "jungle", // Cut these out?
+  "road",
+  "city",
+  "river",
+  "park",
+  "sea",
+  "fog",
+  "rain",
+  "snow"
+];
 let shapeClasses = ["triangle", "square", "circle"];
-let initialInnerCubePosition = ".5,.5,0";
+let initialInnerCubePosition = ".5em, .5em, 0";
 let cornersList = [
-  "0,0,.5",
-  "0,0,-.5",
-  "1,0,-.5",
-  "1,0,.5",
+  "2px, 2px, calc(.5em - 2px)",
+  "2px, 2px, calc(-.5em + 2px)",
+  "calc(1em - 2px), 2px, calc(-.5em + 2px)",
+  "calc(1em - 2px), 2px, calc(.5em - 2px)",
   
-  "0,1,.5",
-  "0,1,-.5",
-  "1,1,-.5",
-  "1,1,.5"
+  "0, calc(1em - 2px), calc(.5em - 2px)",
+  "0, calc(1em - 2px), calc(-.5em + 2px)",
+  "calc(1em - 2px), calc(1em - 2px), calc(-.5em + 2px)",
+  "calc(1em - 2px), calc(1em - 2px), calc(.5em - 2px)"
 ];
 let letters = "abflqy";
 let colorClasses = [
@@ -82,11 +123,23 @@ let colorClasses = [
 ];
 
 // Editable settings
+let wallsEnabled = true;
+wallsEnableTrig.checked = wallsEnabled;
+wallsEnableTrig.addEventListener("input", () =>
+  (
+    wallsEnabled = !wallsEnabled,
+    !wallsEnabled ?
+      checkWallsBtn.style.display = "none" :
+      checkWallsBtn.style.display = "inline-block",
+    checkWallsBtn.style.animationDelay = "0s"
+  )
+);
+
 let cameraEnabled = true;
 cameraEnableTrig.checked = cameraEnabled;
 cameraEnableTrig.addEventListener("input", () =>
   (
-    cameraEnabled = !faceEnabled,
+    cameraEnabled = !cameraEnabled,
     !cameraEnabled ?
       checkCameraBtn.style.display = "none" :
       checkCameraBtn.style.display = "inline-block",
@@ -115,6 +168,18 @@ positionEnableTrig.addEventListener("input", () =>
       checkPositionBtn.style.display = "none" :
       checkPositionBtn.style.display = "inline-block",
     checkPositionBtn.style.animationDelay = "0s"
+  )
+);
+
+let wordEnabled = true;
+wordEnableTrig.checked = wordEnabled;
+wordEnableTrig.addEventListener("input", () =>
+  (
+    wordEnabled = !wordEnabled,
+    !wordEnabled ?
+      checkWordBtn.style.display = "none" :
+      checkWordBtn.style.display = "inline-block",
+    checkWordBtn.style.animationDelay = "0s"
   )
 );
 
@@ -221,7 +286,7 @@ repeating-conic-gradient(
   #000${hexBrightness}
 ),
 radial-gradient(
-  at 53.5em 53.5em,
+  at 54em 53.5em,
   #0000,
   #0000 15%,
   20%,
@@ -304,22 +369,16 @@ gameStartDelayInput.addEventListener("input", () =>
   gameStartDelay = +gameStartDelayInput.value
 );
 
-let baseDelay = 2500;
+let baseDelay = 3000;
 baseDelayInput.value = baseDelay;
 baseDelayInput.addEventListener("input", () =>
   baseDelay = +baseDelayInput.value
 );
 
-let cumulativeDelay = 500;
+let cumulativeDelay = 1000;
 cumulativeDelayInput.value = cumulativeDelay;
 cumulativeDelayInput.addEventListener("input", () =>
   cumulativeDelay = +cumulativeDelayInput.value
-);
-
-let tileFlashTime = 1500;
-tileFlashTimeInput.value = tileFlashTime;
-tileFlashTimeInput.addEventListener("input", () =>
-  tileFlashTime = +tileFlashTimeInput.value
 );
 
 let prevLevelThreshold = 0.5;
@@ -342,37 +401,45 @@ let intervals = [];
 let isRunning = false;
 
 // I know I should use objects here, I will re-factor it at some point...
+let enableWallsCheck = true;
 let enableCameraCheck = true;
 let enableFaceCheck = true;
 let enablePositionCheck = true;
 
+let enableWordCheck = true;
 let enableShapeCheck = true;
 let enableCornerCheck = true;
 let enableSoundCheck = true;
 let enableColorCheck = true;
 
+let currWalls;
 let currCamera;
 let currFace;
 let currPosition;
 
+let currWord;
 let currShape;
 let currCorner;
 let currSound;
 let currColor;
 
+let rightWalls = 0;
 let rightCamera = 0;
 let rightFace = 0;
 let rightPosition = 0;
 
+let rightWord = 0;
 let rightShape = 0;
 let rightCorner = 0;
 let rightSound = 0;
 let rightColor = 0;
 
+let wrongWalls = 0;
 let wrongCamera = 0;
 let wrongFace = 0;
 let wrongPosition = 0;
 
+let wrongWord = 0;
 let wrongShape = 0;
 let wrongCorner = 0;
 let wrongSound = 0;
@@ -457,52 +524,70 @@ function createBlocks(symbols, n) {
 function resetPoints() {
   matchingStimuli = 0;
   
+  rightWalls = 0;
   rightCamera = 0;
   rightFace = 0;
   rightPosition = 0;
   
+  rightWord = 0;
   rightShape = 0;
   rightCorner = 0;
   rightSound = 0;
   rightColor = 0;
   
+  wrongWalls = 0;
   wrongCamera = 0;
   wrongFace = 0;
   wrongPosition = 0;
   
+  wrongWord = 0;
   wrongShape = 0;
   wrongCorner = 0;
   wrongSound = 0;
   wrongColor = 0;
   
-  move(cube, initialCubePosition, initialCubePosition);
-  move(innerCube, initialInnerCubePosition, initialInnerCubePosition);
+  move(cube, initialCubePosition);
+  move(innerCube, initialInnerCubePosition);
   rotateCamera(-40, -45);
+  floors.forEach(floor =>
+    setFloorBackground(
+      floor,
+      sceneDimmer,
+      tileAHexColor,
+      tileBHexColor
+    )
+  );
 }
 
 function resetBlock() {
+  enableWallsCheck = true;
   enableCameraCheck = true;
   enableFaceCheck = true;
   enablePositionCheck = true;
   
+  enableWordCheck = true;
   enableShapeCheck = true;
   enableCornerCheck = true;
   enableSoundCheck = true;
   enableColorCheck = true;
   
+  currWalls = null;
   currCamera = null;
   currFace = null;
   currPosition = null;
   
+  currWord = null;
   currShape = null;
   currCorner = null;
   currSound = null;
   currColor = null;
   
+  checkWallsBtn.classList.remove("right", "wrong");
   checkCameraBtn.classList.remove("right", "wrong");
   checkFaceBtn.classList.remove("right", "wrong");
   checkPositionBtn.classList.remove("right", "wrong");
   
+  checkWordBtn.classList.remove("right", "wrong");
   checkShapeBtn.classList.remove("right", "wrong");
   checkCornerBtn.classList.remove("right", "wrong");
   checkSoundBtn.classList.remove("right", "wrong");
@@ -520,14 +605,8 @@ function rotateCamera(cx, cy) {
   shape.style.transform = `translate(-50%, -50%) rotateY(${-cy}deg) rotateX(${-cx}deg)`;
 }
 
-function move(el, prevPosString, currPosString) {
-  
-  console.log(el, prevPosString, currPosString);
-  
-  let [px, py, pz] = prevPosString.split(",");
-  let [cx, cy, cz] = currPosString.split(",");
-  
-  el.style.transform = `translate3d(${cx}em, ${cy}em, ${cz}em)`;
+function move(el, currPosString) {
+  el.style.transform = `translate3d(${currPosString})`;
 }
 
 function wow(htmlElement, cssClass, delay) {
@@ -545,8 +624,19 @@ function speak(text) {
   return utter;
 }
 
+function writeWord(word) {
+  wallWords.forEach(wall => {
+    wall.innerText = word;
+    wow(wall, "text-white", baseDelay - 400);
+  });
+}
+
 function getGameCycle(n) {
   
+  let walls;
+  if (wallsEnabled) {
+    walls = createBlocks(wallColorsList, n);
+  }
   let cameras;
   if (cameraEnabled) {
     cameras = createBlocks(points, n);
@@ -560,6 +650,10 @@ function getGameCycle(n) {
     positions = createBlocks(moves, n);
   }
   
+  let words;
+  if (wordEnabled) {
+    words = createBlocks(wordsList, n);
+  }
   let shapes;
   if (shapeEnabled) {
     shapes = createBlocks(shapeClasses, n);
@@ -577,6 +671,10 @@ function getGameCycle(n) {
     colors = createBlocks(colorClasses, n);
   }
   
+  console.log(
+    walls, cameras, faces, positions, words, shapes, corners, sounds, colors
+  );
+  
   let i = 0;
   return function() {
     
@@ -592,6 +690,9 @@ function getGameCycle(n) {
     if (i > length - 1) {
       
       let percentage = 0;
+      if (wallsEnabled) {
+        percentage += rightWalls;
+      }
       if (cameraEnabled) {
         percentage += rightCamera;
       }
@@ -602,6 +703,9 @@ function getGameCycle(n) {
         percentage += rightPosition;
       }
       
+      if (wordEnabled) {
+        percentage += rightWord;
+      }
       if (cornerEnabled) {
         percentage += rightCorner;
         if (shapeEnabled) {
@@ -617,6 +721,9 @@ function getGameCycle(n) {
       percentage /= matchingStimuli;
       
       let mistakes = 0;
+      if (wallsEnabled) {
+        mistakes += wrongWalls;
+      }
       if (cameraEnabled) {
         mistakes += wrongCamera;
       }
@@ -627,6 +734,9 @@ function getGameCycle(n) {
         mistakes += wrongPosition;
       }
       
+      if (wordEnabled) {
+        mistakes += wrongWord;
+      }
       if (cornerEnabled) {
         mistakes += wrongCorner;
         if (shapeEnabled) {
@@ -672,6 +782,17 @@ function getGameCycle(n) {
     // Count stimulus
     stimuliCount++;
     
+    if (wallsEnabled) {
+      currWalls = walls[i];
+      floors.forEach(floor =>
+        setFloorBackground(
+          floor,
+          sceneDimmer,
+          tileAHexColor,
+          currWalls.symbol
+        )
+      );
+    }
     if (cameraEnabled) {
       currCamera = cameras[i];
       let [cx, cy] = currCamera.symbol.split("&");
@@ -681,36 +802,30 @@ function getGameCycle(n) {
       currFace = faces[i];
       if (colorEnabled) {
         currColor = colors[i];
-        wow(faceEls[currFace.symbol - 1], currColor.symbol, tileFlashTime);
+        wow(faceEls[currFace.symbol - 1], currColor.symbol, baseDelay - 400);
       } else {
-        wow(faceEls[currFace.symbol - 1], "col-a", tileFlashTime);
+        wow(faceEls[currFace.symbol - 1], "col-a", baseDelay - 400);
       }
     } else if (colorEnabled) {
       currColor = colors[i];
-      wow(faceEls[0], currColor.symbol, tileFlashTime);
+      wow(faceEls[0], currColor.symbol, baseDelay - 400);
     }
     if (positionEnabled) {
       currPosition = positions[i];
-      let prevPosition = (positions[i-1] || { symbol: initialCubePosition });
-      move(
-        cube,
-        prevPosition.symbol,
-        currPosition.symbol
-      );
+      move(cube, currPosition.symbol);
     }
     
+    if (wordEnabled) {
+      currWord = words[i];
+      writeWord(currWord.symbol);
+    }
     if (cornerEnabled) {
       currCorner = corners[i];
-      let prevCorner = (corners[i-1] || { symbol: initialInnerCubePosition });
-      move(
-        innerCube,
-        prevCorner.symbol,
-        currCorner.symbol
-      );
+      move(innerCube, currCorner.symbol);
       
       if (shapeEnabled) {
         currShape = shapes[i];
-        wow(shape, currShape.symbol, tileFlashTime);
+        wow(shape, currShape.symbol, baseDelay - 400);
       }
     }
     if (soundEnabled) {
@@ -768,7 +883,11 @@ function checkHandler(sense) {
   let enable;
   
   // This part is garbage but hey I've used single vars xD
-  if (sense === "camera") {
+  if (sense === "walls") {
+    curr = currWalls;
+    button = checkWallsBtn;
+    enable = enableWallsCheck;
+  } else if (sense === "camera") {
     curr = currCamera;
     button = checkCameraBtn;
     enable = enableCameraCheck;
@@ -780,6 +899,10 @@ function checkHandler(sense) {
     curr = currPosition;
     button = checkPositionBtn;
     enable = enablePositionCheck;
+  } else if (sense === "word") {
+    curr = currWord;
+    button = checkWordBtn;
+    enable = enableWordCheck;
   } else if (sense === "shape") {
     curr = currShape;
     button = checkShapeBtn;
@@ -802,12 +925,16 @@ function checkHandler(sense) {
     return;
   }
   
-  if (sense === "camera") {
+  if (sense === "walls") {
+    enableWallsCheck = false;
+  } else if (sense === "camera") {
     enableCameraCheck = false;
   } else if (sense === "face") {
     enableFaceCheck = false;
   } else if (sense === "position") {
     enablePositionCheck = false;
+  } else if (sense === "word") {
+    enableWordCheck = false;
   } else if (sense === "shape") {
     enableShapeCheck = false;
   } else if (sense === "corner") {
@@ -822,12 +949,16 @@ function checkHandler(sense) {
   
   if (curr.isMatching) {
     
-    if (sense === "camera") {
+    if (sense === "walls") {
+      rightWalls++;
+    } else if (sense === "camera") {
       rightCamera++;
     } else if (sense === "face") {
       rightFace++;
     } else if (sense === "position") {
       rightPosition++;
+    } else if (sense === "word") {
+      rightWord++;
     } else if (sense === "shape") {
       rightShape++;
     } else if (sense === "corner") {
@@ -841,13 +972,17 @@ function checkHandler(sense) {
     button.classList.add("right");
   } else {
     
-    if (sense === "camera") {
+    if (sense === "walls") {
+      wrongWalls++;
+    } else if (sense === "camera") {
       wrongCamera++;
     } else if (sense === "face") {
       wrongFace++;
     } else if (sense === "position") {
       wrongPosition++;
-    } else if (sense === "shape") {
+    } else if (sense === "word") {
+      wrongWord++;
+    } if (sense === "shape") {
       wrongShape++;
     } else if (sense === "corner") {
       wrongCorner++;
@@ -861,7 +996,7 @@ function checkHandler(sense) {
   }
 }
 
-["camera", "face", "position", "corner", "shape", "sound", "color"]
+["walls", "camera", "face", "position", "word", "shape", "corner", "sound", "color"]
   .forEach(sense => {
     document.querySelector(".check-" + sense)
       .addEventListener(
@@ -878,12 +1013,16 @@ function checkHandler(sense) {
 document.addEventListener(
   "keypress",
   evt => {
-    if (evt.code === "KeyS") {
+    if (evt.code === "KeyA") {
+      checkHandler("walls");
+    } else if (evt.code === "KeyS") {
       checkHandler("camera");
     } else if (evt.code === "KeyD") {
       checkHandler("face");
     } else if (evt.code === "KeyF") {
       checkHandler("position");
+    } else if (evt.code === "KeyG") {
+      checkHandler("word");
     } else if (evt.code === "KeyH") {
       checkHandler("shape");
     } else if (evt.code === "KeyJ") {
