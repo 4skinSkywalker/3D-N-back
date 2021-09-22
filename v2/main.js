@@ -364,7 +364,6 @@ targetStimuliInput.addEventListener("input", () =>
   targetNumOfStimuli = +targetStimuliInput.value
 );
 
-let wowTimeCutoff = 300;
 let gameStartDelay = 3000;
 let baseDelay = 5000;
 baseDelayInput.value = baseDelay;
@@ -643,7 +642,7 @@ function speak(text) {
 function writeWord(word) {
   wallWords.forEach(wall => {
     wall.innerText = word;
-    wow(wall, "text-white", baseDelay - wowTimeCutoff);
+    wow(wall, "text-white", baseDelay - 300);
   });
 }
 
@@ -769,12 +768,17 @@ function getGameCycle(n) {
       let errorThresholdLower = 3;
       
       // Delay calculation, adapting to the user skill level
-      let missed = matchingStimuli - correctStimuli - mistakes;
-      let deltaDelay = missed * 200 + mistakes * 400 - correctStimuli * 50;
+      let missed = matchingStimuli - correctStimuli;
+      let deltaDelay = missed * 200 + mistakes * 200 - correctStimuli * 100;
       baseDelay = Math.min(Math.max(baseDelay + deltaDelay, minDelay), maxDelay);
       baseDelayInput.value = baseDelay;
       
-      stop();
+      console.log("Matching", matchingStimuli);
+      console.log("Correct", correctStimuli);
+      console.log("Missed", missed);
+      console.log("Mistaken", mistakes);
+      
+      stop(); // This resets stuff (matchingStimuli etc...)
       
       speak(`You've got ${Math.floor(percentage * 100)} percent of correct stimuli. With ${mistakes} mistake${(mistakes > 1) ? "s" : ""}.`)
         .onend = function () {
@@ -832,13 +836,13 @@ function getGameCycle(n) {
       currFace = faces[i];
       if (colorEnabled) {
         currColor = colors[i];
-        wow(faceEls[currFace.symbol - 1], currColor.symbol, baseDelay - wowTimeCutoff);
+        wow(faceEls[currFace.symbol - 1], currColor.symbol, baseDelay - 500);
       } else {
-        wow(faceEls[currFace.symbol - 1], "col-a", baseDelay - wowTimeCutoff);
+        wow(faceEls[currFace.symbol - 1], "col-a", baseDelay - 500);
       }
     } else if (colorEnabled) {
       currColor = colors[i];
-      wow(faceEls[0], currColor.symbol, baseDelay - wowTimeCutoff);
+      wow(faceEls[0], currColor.symbol, baseDelay - 500);
     }
     if (positionEnabled) {
       currPosition = positions[i];
@@ -855,7 +859,7 @@ function getGameCycle(n) {
       
       if (shapeEnabled) {
         currShape = shapes[i];
-        wow(shape, currShape.symbol, baseDelay - wowTimeCutoff);
+        wow(shape, currShape.symbol, baseDelay - 700);
       }
     }
     if (soundEnabled) {
