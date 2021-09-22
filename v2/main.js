@@ -2,17 +2,15 @@ let sceneWrapper = document.querySelector(".scene-wrapper");
 let scene = document.querySelector(".scene");
 
 let floors = [...document.querySelectorAll(".floor")];
+let wallColors = [...document.querySelectorAll('[class^="wall"][class$="color"]')];
+let wallWords = [...document.querySelectorAll('[class^="wall"][class$="word"]')];
 
 let cube = document.querySelector(".cube");
 let faceEls = [...document.querySelectorAll(".cube > .face")];
 
 let innerCube = document.querySelector(".inner-cube");
 let innerFaceEls = [...document.querySelectorAll(".inner-cube > .face")];
-
 let shape = document.querySelector(".shape");
-
-let wallColors = [...document.querySelectorAll('[class^="wall"][class$="color"]')];
-let wallWords = [...document.querySelectorAll('[class^="wall"][class$="word"]')];
 
 let checkWallsBtn = document.querySelector(".check-walls");
 let checkCameraBtn = document.querySelector(".check-camera");
@@ -26,14 +24,17 @@ let checkSoundBtn = document.querySelector(".check-sound");
 let checkColorBtn = document.querySelector(".check-color");
 
 let nBackInput = document.querySelector("#n-back");
+
 let sceneDimmerInput = document.querySelector("#scene-dimmer");
 let zoomInput = document.querySelector("#zoom");
 let perspectiveInput = document.querySelector("#perspective");
+
 let targetStimuliInput = document.querySelector("#targetStimuli");
-let gameStartDelayInput = document.querySelector("#gameStartDelay");
+
 let baseDelayInput = document.querySelector("#baseDelay");
-let cumulativeDelayInput = document.querySelector("#cumulativeDelay");
-let tileFlashTimeInput = document.querySelector("#tileFlashTime");
+let minDelayInput = document.querySelector("#minDelay");
+let maxDelayInput = document.querySelector("#maxDelay");
+
 let previousLevelThresholdInput = document.querySelector("#previousLevelThreshold");
 let nextLevelThresholdInput = document.querySelector("#nextLevelThreshold");
 
@@ -66,9 +67,9 @@ let wallColorsList = [
   "#00b894",
   "#0984e3",
   "#6c5ce7",
-  "#fdcb6e",
+  "#fecb22",
   "#d63031",
-  "#e84393"
+  "#a92276"
 ];
 let points = [
   "-60&0", "-60&-45", "-60&-90",
@@ -357,29 +358,44 @@ perspectiveInput.addEventListener("input", () => {
   sceneWrapper.style.perspective = `${perspective}em`;
 });
 
-let targetNumOfStimuli = 10;
+let targetNumOfStimuli = 5;
 targetStimuliInput.value = targetNumOfStimuli;
 targetStimuliInput.addEventListener("input", () =>
   targetNumOfStimuli = +targetStimuliInput.value
 );
 
-let gameStartDelay = 2000;
-gameStartDelayInput.value = gameStartDelay;
-gameStartDelayInput.addEventListener("input", () =>
-  gameStartDelay = +gameStartDelayInput.value
-);
-
-let baseDelay = 3000;
+let wowTimeCutoff = 300;
+let gameStartDelay = 3000;
+let baseDelay = 5000;
 baseDelayInput.value = baseDelay;
-baseDelayInput.addEventListener("input", () =>
-  baseDelay = +baseDelayInput.value
-);
-
-let cumulativeDelay = 1000;
-cumulativeDelayInput.value = cumulativeDelay;
-cumulativeDelayInput.addEventListener("input", () =>
-  cumulativeDelay = +cumulativeDelayInput.value
-);
+let minDelay = 3000;
+minDelayInput.value = minDelay;
+let maxDelay = 10000;
+maxDelayInput.value = maxDelay;
+baseDelayInput.addEventListener("input", () => {
+  baseDelay = Math.min(Math.max(+baseDelayInput.value, minDelay), maxDelay);
+  if (+baseDelayInput.value < minDelay || +baseDelayInput.value > maxDelay) {
+    baseDelayInput.style.borderColor = "#f00";
+  } else {
+    baseDelayInput.style.borderColor = "#fff";
+  }
+});
+minDelayInput.addEventListener("input", () => {
+  minDelay = Math.min(+minDelayInput.value, baseDelay);
+  if (+minDelayInput.value > baseDelay) {
+    minDelayInput.style.borderColor = "#f00";
+  } else {
+    minDelayInput.style.borderColor = "#fff";
+  }
+});
+maxDelayInput.addEventListener("input", () => {
+  maxDelay = Math.max(+maxDelayInput.value, baseDelay);
+  if (+maxDelayInput.value < baseDelay) {
+    maxDelayInput.style.borderColor = "#f00";
+  } else {
+    maxDelayInput.style.borderColor = "#fff";
+  }
+});
 
 let prevLevelThreshold = 0.5;
 previousLevelThresholdInput.value = prevLevelThreshold * 100;
@@ -627,7 +643,7 @@ function speak(text) {
 function writeWord(word) {
   wallWords.forEach(wall => {
     wall.innerText = word;
-    wow(wall, "text-white", baseDelay - 400);
+    wow(wall, "text-white", baseDelay - wowTimeCutoff);
   });
 }
 
@@ -689,36 +705,36 @@ function getGameCycle(n) {
     // End game
     if (i > length - 1) {
       
-      let percentage = 0;
+      let correctStimuli = 0;
       if (wallsEnabled) {
-        percentage += rightWalls;
+        correctStimuli += rightWalls;
       }
       if (cameraEnabled) {
-        percentage += rightCamera;
+        correctStimuli += rightCamera;
       }
       if (faceEnabled) {
-        percentage += rightFace;
+        correctStimuli += rightFace;
       }
       if (positionEnabled) {
-        percentage += rightPosition;
+        correctStimuli += rightPosition;
       }
       
       if (wordEnabled) {
-        percentage += rightWord;
+        correctStimuli += rightWord;
       }
       if (cornerEnabled) {
-        percentage += rightCorner;
+        correctStimuli += rightCorner;
         if (shapeEnabled) {
-          percentage += rightShape;
+          correctStimuli += rightShape;
         }
       }
       if (soundEnabled) {
-        percentage += rightSound;
+        correctStimuli += rightSound;
       }
       if (colorEnabled) {
-        percentage += rightColor;
+        correctStimuli += rightColor;
       }
-      percentage /= matchingStimuli;
+      let percentage = correctStimuli / matchingStimuli;
       
       let mistakes = 0;
       if (wallsEnabled) {
@@ -752,6 +768,12 @@ function getGameCycle(n) {
       let errorThresholdUpper = 1; // old one: matchingStimuli * 0.4;
       let errorThresholdLower = 3;
       
+      // Delay calculation, adapting to the user skill level
+      let missed = matchingStimuli - correctStimuli - mistakes;
+      let deltaDelay = missed * 200 + mistakes * 200 - correctStimuli * 100;
+      baseDelay = Math.min(Math.max(baseDelay + deltaDelay, minDelay), maxDelay);
+      baseDelayInput.value = baseDelay;
+      
       stop();
       
       speak(`You've got ${Math.floor(percentage * 100)} percent of correct stimuli. With ${mistakes} mistake${(mistakes > 1) ? "s" : ""}.`)
@@ -767,21 +789,29 @@ function getGameCycle(n) {
             (percentage <= prevLevelThreshold || mistakes > errorThresholdLower)
             && +nBackInput.value > 1
           ) {
-            speak("Going back to the previous level. Keep training, you'll get better.");
+            speak("Going back to the previous level.");
             nBackInput.value = +nBackInput.value - 1;
           } else {
-            speak("Level remains the same. Over time you'll get better.");
+            speak("Level remains the same.");
           }
-      };
+        
+          // Delay changes
+          if (deltaDelay > 0) {
+            speak(`Delay between stimuli, increased to ${baseDelay / 1000} seconds`);
+          } else if (deltaDelay === 0) {
+            speak("Delay between stimuli, stays the same."); 
+          } else {
+            speak(`Delay between stimuli, decreased to ${baseDelay / 1000} seconds`); 
+          }
+        };
       
       return;
     }
     
-    // Operations
-    
     // Count stimulus
     stimuliCount++;
     
+    // Animating stimuli
     if (wallsEnabled) {
       currWalls = walls[i];
       floors.forEach(floor =>
@@ -802,13 +832,13 @@ function getGameCycle(n) {
       currFace = faces[i];
       if (colorEnabled) {
         currColor = colors[i];
-        wow(faceEls[currFace.symbol - 1], currColor.symbol, baseDelay - 400);
+        wow(faceEls[currFace.symbol - 1], currColor.symbol, baseDelay - wowTimeCutoff);
       } else {
-        wow(faceEls[currFace.symbol - 1], "col-a", baseDelay - 400);
+        wow(faceEls[currFace.symbol - 1], "col-a", baseDelay - wowTimeCutoff);
       }
     } else if (colorEnabled) {
       currColor = colors[i];
-      wow(faceEls[0], currColor.symbol, baseDelay - 400);
+      wow(faceEls[0], currColor.symbol, baseDelay - wowTimeCutoff);
     }
     if (positionEnabled) {
       currPosition = positions[i];
@@ -825,7 +855,7 @@ function getGameCycle(n) {
       
       if (shapeEnabled) {
         currShape = shapes[i];
-        wow(shape, currShape.symbol, baseDelay - 400);
+        wow(shape, currShape.symbol, baseDelay - wowTimeCutoff);
       }
     }
     if (soundEnabled) {
@@ -856,7 +886,7 @@ function play() {
   intervals.push(
     setInterval(
       gameCycle,
-      gameStartDelay + baseDelay + n * cumulativeDelay
+      gameStartDelay + baseDelay
     )
   );
 }

@@ -297,27 +297,27 @@ body {
 }
 
 .col-a {
-  background-color: #0f08!important;
-}
-
-.col-b {
-  background-color: #00f8!important;
-}
-
-.col-c {
-  background-color: #ff08!important;
-}
-
-.col-d {
-  background-color: #f0f8!important;
-}
-
-.col-e {
   background-color: #0ff8!important;
 }
 
+.col-b {
+  background-color: #08e8!important;
+}
+
+.col-c {
+  background-color: #65e8!important;
+}
+
+.col-d {
+  background-color: #ff08!important;
+}
+
+.col-e {
+  background-color: #d338!important;
+}
+
 .col-f {
-  background-color: #f008!important;
+  background-color: #f0f8!important;
 }
 
 .cube > .top {
@@ -370,9 +370,9 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #fff4;
-  outline: 1px solid #000a;
-  box-shadow: inset 0 0 2px #000a;
+  background-color: #fff2;
+  outline: 1px solid #ffff;
+  box-shadow: inset 0 0 2px #ffff;
   animation: fade-in 1s ease backwards 3s;
 }
 
