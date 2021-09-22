@@ -770,7 +770,7 @@ function getGameCycle(n) {
       
       // Delay calculation, adapting to the user skill level
       let missed = matchingStimuli - correctStimuli - mistakes;
-      let deltaDelay = missed * 200 + mistakes * 200 - correctStimuli * 100;
+      let deltaDelay = missed * 200 + mistakes * 400 - correctStimuli * 50;
       baseDelay = Math.min(Math.max(baseDelay + deltaDelay, minDelay), maxDelay);
       baseDelayInput.value = baseDelay;
       
