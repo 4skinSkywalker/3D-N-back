@@ -770,8 +770,10 @@ function getGameCycle(n) {
       // Delay calculation, adapting to the user skill level
       let missed = matchingStimuli - correctStimuli;
       let deltaDelay = missed * 200 + mistakes * 200 - correctStimuli * 100;
-      baseDelay = Math.min(Math.max(baseDelay + deltaDelay, minDelay), maxDelay);
-      baseDelayInput.value = baseDelay;
+      let newBaseDelay = Math.min(Math.max(baseDelay + deltaDelay, minDelay), maxDelay);
+      let hasDelayChanged = newBaseDelay !== baseDelay;
+      baseDelay = newBaseDelay;
+      baseDelayInput.value = newBaseDelay;
       
       console.log("Matching", matchingStimuli);
       console.log("Correct", correctStimuli);
@@ -800,10 +802,10 @@ function getGameCycle(n) {
           }
         
           // Delay changes
-          if (deltaDelay > 0) {
-            speak(`Delay between stimuli, increased to ${baseDelay / 1000} seconds`);
-          } else if (deltaDelay === 0) {
+          if (!hasDelayChanged) {
             speak("Delay between stimuli, stays the same."); 
+          } else if (deltaDelay > 0) {
+            speak(`Delay between stimuli, increased to ${baseDelay / 1000} seconds`);
           } else {
             speak(`Delay between stimuli, decreased to ${baseDelay / 1000} seconds`); 
           }
