@@ -367,7 +367,7 @@ targetStimuliInput.addEventListener("input", () =>
 let gameStartDelay = 3000;
 let baseDelay = 5000;
 baseDelayInput.value = baseDelay;
-let minDelay = 3000;
+let minDelay = 2000;
 minDelayInput.value = minDelay;
 let maxDelay = 10000;
 maxDelayInput.value = maxDelay;
@@ -771,7 +771,7 @@ function getGameCycle(n) {
       let missed = matchingStimuli - correctStimuli;
       let deltaDelay = missed * 200 + mistakes * 200 - correctStimuli * 100;
       let newBaseDelay = Math.min(Math.max(baseDelay + deltaDelay, minDelay), maxDelay);
-      let hasDelayChanged = newBaseDelay !== baseDelay;
+      let hasDelayChanged = newBaseDelay !== +baseDelay; // I don't remember if baseDelay is a number or a string so I cast with +
       baseDelay = newBaseDelay;
       baseDelayInput.value = newBaseDelay;
       
