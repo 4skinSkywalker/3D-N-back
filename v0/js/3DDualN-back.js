@@ -11,9 +11,9 @@ function Engine(name) {
         target: "stimulus-time",
         text: "Stimulus:",
         value: 2500,
-        min: 2000,
-        step: 2500,
-        MAX: 3000,
+        min: 1000,
+        step: 250,
+        MAX: 5000,
         char: "ms"
     };
     this.blocks = {
