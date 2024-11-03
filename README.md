@@ -1,7 +1,5 @@
-# Open Source cross platform 3D Dual N-back
-
-Try [3D N-back v0 (dual cubeception)](https://4skinskywalker.github.io/3D-N-back/v0)
-
-Try [3D N-back v1 (dual cube in the scene)](https://4skinskywalker.github.io/3D-N-back/v1)
-
-Try [3D N-back v2 (quad face, sound, color & position)](https://4skinskywalker.github.io/3D-N-back/v2)
+# Inactive repo
+The apps that were here have been moved elsewhere:
+- [3D Dual N-back Cubeception](https://4skinskywalker.github.io/3D-Dual-N-back-Cubeception)
+- [3D Dual N-back Cube in the Middle](https://4skinskywalker.github.io/3D-Dual-N-back-Cube-in-the-Middle)
+- [3D Hyper N-back](https://4skinskywalker.github.io/3D-Hyper-N-back)
